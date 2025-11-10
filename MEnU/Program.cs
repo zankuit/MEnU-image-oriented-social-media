@@ -1,4 +1,4 @@
-namespace MEnU
+﻿namespace MEnU
 {
     internal static class Program
     {
@@ -11,7 +11,15 @@ namespace MEnU
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            Application.Run(new Login());
+            FirebaseAuthService.Initialize();
+            if (FirebaseAuthService.GetCurrentUser() != null)
+            {
+                Application.Run(new frmHome()); // remember user token
+            }
+            else
+            {
+                Application.Run(new frmLogin()); // forget user token
+            }
         }
     }
 }
