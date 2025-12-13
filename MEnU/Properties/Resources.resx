@@ -121,14 +121,29 @@
   <data name="cf5ac9b979b57bff8791502aa5cb7d15" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\cf5ac9b979b57bff8791502aa5cb7d15.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="3d-chat-bubble-share_148391-347" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\3d-chat-bubble-share_148391-347.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="8819786" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\8819786.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Logo final" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Logo final.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="home-150499_1280" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\home-150499_1280.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="cf5ac9b979b57bff8791502aa5cb7d151" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\cf5ac9b979b57bff8791502aa5cb7d151.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="8" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\8.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="lock_icon_6813906" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\lock_icon_6813906.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="cf5ac9b979b57bff8791502aa5cb7d151" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\cf5ac9b979b57bff8791502aa5cb7d151.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="MenuLogo" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\MEnUlogo1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="3d-chat-bubble-share_148391-347" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\3d-chat-bubble-share_148391-347.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="R" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\R.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -136,13 +151,73 @@
   <data name="3d-chat-bubble-share_148391-3471" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\3d-chat-bubble-share_148391-3471.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="8819786" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\8819786.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="User" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\User.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="home-150499_1280" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\home-150499_1280.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="AcceptIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\AcceptIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="AddIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\AddIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="AvatarIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\AvatarIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="confirmicon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\confirmicon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DownIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DownIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="EmailIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\EmailIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="FindIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\FindIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="FriendIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\FriendIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="HahaIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\HahaIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="HeartIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\HeartIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="HugIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\HugIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="LoadIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\LoadIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="MessageIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\MessageIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NotiIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NotiIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Password_Icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Password_Icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="PostIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\PostIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="RefuseIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\RefuseIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ReloadIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ReloadIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SadIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SadIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SettingIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SettingIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="UpIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\UpIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="User_Icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\User_Icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
