@@ -1,0 +1,76 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\3d-chat-bubble-share_148391-347.jpg" />
+    <None Remove="Resources\3d-chat-bubble-share_148391-3471.jpg" />
+    <None Remove="Resources\8819786.png" />
+    <None Remove="Resources\cf5ac9b979b57bff8791502aa5cb7d15.png" />
+    <None Remove="Resources\cf5ac9b979b57bff8791502aa5cb7d151.png" />
+    <None Remove="Resources\home-150499_1280.png" />
+    <None Remove="Resources\lock_icon_6813906.jpg" />
+    <None Remove="Resources\R.png" />
+    <None Remove="Resources\User.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FirebaseAuthentication.net" Version="4.1.0" />
+    <PackageReference Include="Guna.UI2.WinForms" Version="2.0.4.7" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.10" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\3d-chat-bubble-share_148391-347.jpg" />
+    <Resource Include="Resources\3d-chat-bubble-share_148391-3471.jpg" />
+    <Resource Include="Resources\8819786.png" />
+    <Resource Include="Resources\cf5ac9b979b57bff8791502aa5cb7d15.png" />
+    <Resource Include="Resources\cf5ac9b979b57bff8791502aa5cb7d151.png" />
+    <Resource Include="Resources\home-150499_1280.png" />
+    <Resource Include="Resources\lock_icon_6813906.jpg" />
+    <Resource Include="Resources\R.png" />
+    <Resource Include="Resources\User.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Forms\ForgetPassword.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\ForgetPassword2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\Home.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\Login.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\Register.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>
