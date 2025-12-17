@@ -283,6 +283,7 @@
             btnLoginSignnup.TabIndex = 12;
             btnLoginSignnup.Text = "Đăng nhập";
             btnLoginSignnup.UseVisualStyleBackColor = false;
+            btnLoginSignnup.Click += btnLoginSignnup_Click;
             // 
             // btnSignupSignup
             // 
@@ -301,6 +302,7 @@
             btnSignupSignup.TabIndex = 10;
             btnSignupSignup.Text = "Đăng ký";
             btnSignupSignup.UseVisualStyleBackColor = false;
+            btnSignupSignup.Click += btnSignupSignup_Click;
             // 
             // label2
             // 
