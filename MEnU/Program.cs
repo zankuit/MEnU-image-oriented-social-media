@@ -1,4 +1,6 @@
-﻿namespace MEnU
+﻿using MEnU.Forms;
+
+namespace MEnU
 {
     internal static class Program
     {
@@ -12,14 +14,7 @@
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
             FirebaseAuthService.Initialize();
-            if (FirebaseAuthService.GetCurrentUser() != null)
-            {
-                Application.Run(new frmHome()); // remember user token
-            }
-            else
-            {
-                Application.Run(new frmLogin()); // forget user token
-            }
+            Application.Run(new LoginUI());
         }
     }
 }
