@@ -1,6 +1,4 @@
-﻿using MEnU.Forms;
-
-namespace MEnU
+namespace dangky
 {
     internal static class Program
     {
@@ -13,8 +11,7 @@ namespace MEnU
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            FirebaseAuthService.Initialize();
-            Application.Run(new LoginUI());
+            Application.Run(new dangky());
         }
     }
 }

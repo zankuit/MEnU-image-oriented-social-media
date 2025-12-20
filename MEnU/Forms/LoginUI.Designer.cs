@@ -74,7 +74,7 @@
             label1.ForeColor = Color.White;
             label1.Location = new Point(71, 632);
             label1.Name = "label1";
-            label1.Size = new Size(180, 22);
+            label1.Size = new Size(287, 34);
             label1.TabIndex = 13;
             label1.Text = "Chưa có tài khoản";
             label1.TextAlign = ContentAlignment.MiddleCenter;
@@ -92,7 +92,7 @@
             btnSignupLogin.ForeColor = Color.White;
             btnSignupLogin.Location = new Point(244, 623);
             btnSignupLogin.Name = "btnSignupLogin";
-            btnSignupLogin.Size = new Size(140, 39);
+            btnSignupLogin.Size = new Size(217, 44);
             btnSignupLogin.TabIndex = 12;
             btnSignupLogin.Text = "Đăng ký ngay";
             btnSignupLogin.UseVisualStyleBackColor = false;
@@ -110,7 +110,7 @@
             btnForgetLogin.ForeColor = Color.White;
             btnForgetLogin.Location = new Point(266, 457);
             btnForgetLogin.Name = "btnForgetLogin";
-            btnForgetLogin.Size = new Size(174, 39);
+            btnForgetLogin.Size = new Size(249, 44);
             btnForgetLogin.TabIndex = 11;
             btnForgetLogin.Text = "Quên mật khẩu?";
             btnForgetLogin.UseVisualStyleBackColor = false;
@@ -128,10 +128,11 @@
             btnLoginLogin.ForeColor = Color.White;
             btnLoginLogin.Location = new Point(33, 412);
             btnLoginLogin.Name = "btnLoginLogin";
-            btnLoginLogin.Size = new Size(390, 39);
+            btnLoginLogin.Size = new Size(390, 47);
             btnLoginLogin.TabIndex = 10;
             btnLoginLogin.Text = "Đăng nhập";
             btnLoginLogin.UseVisualStyleBackColor = false;
+            btnLoginLogin.Click += btnLoginLogin_Click;
             // 
             // panel3
             // 
@@ -161,7 +162,7 @@
             txtPasswordLogin.Location = new Point(62, 14);
             txtPasswordLogin.Name = "txtPasswordLogin";
             txtPasswordLogin.PasswordChar = '*';
-            txtPasswordLogin.Size = new Size(305, 22);
+            txtPasswordLogin.Size = new Size(305, 34);
             txtPasswordLogin.TabIndex = 5;
             // 
             // panel2
@@ -191,7 +192,7 @@
             txtEmailLogin.Font = new Font("Consolas", 10.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
             txtEmailLogin.Location = new Point(62, 15);
             txtEmailLogin.Name = "txtEmailLogin";
-            txtEmailLogin.Size = new Size(305, 22);
+            txtEmailLogin.Size = new Size(305, 34);
             txtEmailLogin.TabIndex = 2;
             // 
             // label2
@@ -202,7 +203,7 @@
             label2.ForeColor = Color.FromArgb(105, 203, 253);
             label2.Location = new Point(179, 162);
             label2.Name = "label2";
-            label2.Size = new Size(99, 43);
+            label2.Size = new Size(162, 70);
             label2.TabIndex = 4;
             label2.Text = "MEnU";
             label2.TextAlign = ContentAlignment.MiddleCenter;
@@ -221,7 +222,7 @@
             // 
             // LoginUI
             // 
-            AutoScaleDimensions = new SizeF(10F, 22F);
+            AutoScaleDimensions = new SizeF(16F, 34F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(457, 663);
             Controls.Add(panel1);
