@@ -1,17 +1,22 @@
 ﻿using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
 using System.Text;
 
 namespace MEnU.Forms
 {
+
     public partial class LoginUI : Form
     {
         string baseUrl = @"https://unvulgarly-unfueled-mozella.ngrok-free.dev";
-
         public LoginUI()
         {
             InitializeComponent();
         }
-
         private void SaveToken(string accessToken, string refreshToken)
         {
             string appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
@@ -85,12 +90,6 @@ namespace MEnU.Forms
         {
             this.Hide();
             new RegisterUI().Show();
-        }
-
-        private async void btnForgetLogin_Click(object sender, EventArgs e)
-        {
-            this.Hide();
-            new ForgetUI().Show();
         }
     }
 }
