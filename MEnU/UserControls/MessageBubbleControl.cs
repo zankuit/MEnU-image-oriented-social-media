@@ -1,39 +1,24 @@
-﻿using MEnU.Models;
-using MEnU.Services;
-using MEnU.UserControl;
-using MEnU.UserControls;
-using Newtonsoft.Json.Linq;
-using System.ComponentModel.Design.Serialization;
+﻿using Newtonsoft.Json.Linq;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Web;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
-namespace MEnU.Forms
+namespace MEnU.UserControls
 {
-    public partial class MainHomeUI : Form
+    public partial class MessageBubbleControl : System.Windows.Forms.UserControl
     {
         string baseUrl = @"https://unvulgarly-unfueled-mozella.ngrok-free.dev/";
 
-        public MainHomeUI()
+        public MessageBubbleControl()
         {
             InitializeComponent();
 
-            // Ẩn tab bar
-            //tabMenu.Appearance = TabAppearance.FlatButtons;
-            //tabMenu.ItemSize = new Size(0, 1);
-            //tabMenu.SizeMode = TabSizeMode.Fixed;
-            rtxLog.Hide();
-            tabMenu.SelectedIndex = 3;
-
-            //flowLayoutPanel1.Scroll += FlowLayoutPanel1_Scroll;
+            picRefPic.Visible = false;
+            picRefPic.Visible = false;
+            picRefPic.Size = new Size(194, 194); // placeholder cố định
+            picRefPic.SizeMode = PictureBoxSizeMode.StretchImage;
+            this.AutoSize = true;
+            this.MinimumSize = new Size(100, 40);
         }
-
-        //
-        // TOKEN-MANIPULATE FUNCTIONS
-        //
 
         private void LoadToken(out string accessToken, out string refreshToken)
         {
@@ -108,34 +93,53 @@ namespace MEnU.Forms
             return true;
         }
 
-        //
-        // HOME TAB (photo)
-        //
+        public async Task SetMessage(MEnU.Models.Messsage msg, string avatarUrl)
+        {
+            if (avatarUrl != null) picAvatar.LoadAsync(avatarUrl);
 
-        
+            if (msg.photoId != null)
+            {
+                picRefPic.Visible = true;
 
-        //
-        // CHAT TAB
-        //
+                using (HttpClient client = new HttpClient())
+                {
+                    LoadToken(out string accessToken, out string refreshToken);
+                    bool isValid = await VerifyToken(accessToken);
 
-        
+                    client.DefaultRequestHeaders.Authorization =
+                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", $"{accessToken}");
 
-        //
-        // FRIENDS TAB
-        //
+                    if (!isValid)
+                    {
+                        var refreshed = await Refresh();
+                        if (!refreshed)
+                        {
+                            MessageBox.Show("Session expired. Please log in again.");
+                            return;
+                        }
 
+                        LoadToken(out string newAccess, out string _);
 
-        //
-        // SETTINGS TAB
-        //
+                        client.DefaultRequestHeaders.Authorization =
+                            new AuthenticationHeaderValue("Bearer", newAccess);
+                    }
 
-        
+                    var response = await client.GetAsync($@"{baseUrl}api/photos/{msg.photoId}");
+                    var responseJson = await response.Content.ReadAsStringAsync();
 
-        //
-        // LINH TINH
-        //
+                    var root = JObject.Parse(responseJson);
+                    bool success = (bool)root["success"];
 
-        
+                    if (success)
+                    {
+                        picRefPic.LoadAsync(root["data"].ToString());
+                    }
+                }
+            }
 
+            lblDisplayName.Text = msg.fromUsername;
+            lblMessage.Text = msg.content;
+         
+        }
     }
 }

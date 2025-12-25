@@ -78,8 +78,9 @@
             panel1.Controls.Add(label2);
             panel1.Controls.Add(pictureBox1);
             panel1.Location = new Point(0, 0);
+            panel1.Margin = new Padding(3, 2, 3, 2);
             panel1.Name = "panel1";
-            panel1.Size = new Size(457, 663);
+            panel1.Size = new Size(400, 497);
             panel1.TabIndex = 1;
             // 
             // groupBox5
@@ -89,9 +90,11 @@
             groupBox5.Controls.Add(pictureBox6);
             groupBox5.Font = new Font("Consolas", 10.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
             groupBox5.ForeColor = Color.White;
-            groupBox5.Location = new Point(33, 477);
+            groupBox5.Location = new Point(29, 358);
+            groupBox5.Margin = new Padding(3, 2, 3, 2);
             groupBox5.Name = "groupBox5";
-            groupBox5.Size = new Size(390, 57);
+            groupBox5.Padding = new Padding(3, 2, 3, 2);
+            groupBox5.Size = new Size(341, 43);
             groupBox5.TabIndex = 15;
             groupBox5.TabStop = false;
             groupBox5.Text = "Xác nhận mật khẩu";
@@ -100,18 +103,20 @@
             // 
             txtConfirmpasswordSignup.BorderStyle = BorderStyle.None;
             txtConfirmpasswordSignup.Font = new Font("Consolas", 10.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            txtConfirmpasswordSignup.Location = new Point(68, 26);
+            txtConfirmpasswordSignup.Location = new Point(60, 20);
+            txtConfirmpasswordSignup.Margin = new Padding(3, 2, 3, 2);
             txtConfirmpasswordSignup.Name = "txtConfirmpasswordSignup";
-            txtConfirmpasswordSignup.Size = new Size(305, 22);
+            txtConfirmpasswordSignup.Size = new Size(267, 17);
             txtConfirmpasswordSignup.TabIndex = 2;
             // 
             // pictureBox6
             // 
             pictureBox6.BackColor = Color.Transparent;
             pictureBox6.Image = Properties.Resources.confirmicon;
-            pictureBox6.Location = new Point(13, 22);
+            pictureBox6.Location = new Point(11, 16);
+            pictureBox6.Margin = new Padding(3, 2, 3, 2);
             pictureBox6.Name = "pictureBox6";
-            pictureBox6.Size = new Size(42, 29);
+            pictureBox6.Size = new Size(37, 22);
             pictureBox6.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox6.TabIndex = 6;
             pictureBox6.TabStop = false;
@@ -123,9 +128,11 @@
             groupBox4.Controls.Add(pictureBox5);
             groupBox4.Font = new Font("Consolas", 10.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
             groupBox4.ForeColor = Color.White;
-            groupBox4.Location = new Point(33, 411);
+            groupBox4.Location = new Point(29, 308);
+            groupBox4.Margin = new Padding(3, 2, 3, 2);
             groupBox4.Name = "groupBox4";
-            groupBox4.Size = new Size(390, 57);
+            groupBox4.Padding = new Padding(3, 2, 3, 2);
+            groupBox4.Size = new Size(341, 43);
             groupBox4.TabIndex = 15;
             groupBox4.TabStop = false;
             groupBox4.Text = "Mật khẩu";
@@ -134,18 +141,20 @@
             // 
             txtPasswordSignup.BorderStyle = BorderStyle.None;
             txtPasswordSignup.Font = new Font("Consolas", 10.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            txtPasswordSignup.Location = new Point(68, 26);
+            txtPasswordSignup.Location = new Point(60, 20);
+            txtPasswordSignup.Margin = new Padding(3, 2, 3, 2);
             txtPasswordSignup.Name = "txtPasswordSignup";
-            txtPasswordSignup.Size = new Size(305, 22);
+            txtPasswordSignup.Size = new Size(267, 17);
             txtPasswordSignup.TabIndex = 2;
             // 
             // pictureBox5
             // 
             pictureBox5.BackColor = Color.Transparent;
             pictureBox5.Image = Properties.Resources.Password_Icon;
-            pictureBox5.Location = new Point(13, 22);
+            pictureBox5.Location = new Point(11, 16);
+            pictureBox5.Margin = new Padding(3, 2, 3, 2);
             pictureBox5.Name = "pictureBox5";
-            pictureBox5.Size = new Size(42, 29);
+            pictureBox5.Size = new Size(37, 22);
             pictureBox5.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox5.TabIndex = 6;
             pictureBox5.TabStop = false;
@@ -157,9 +166,11 @@
             groupBox3.Controls.Add(pictureBox4);
             groupBox3.Font = new Font("Consolas", 10.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
             groupBox3.ForeColor = Color.White;
-            groupBox3.Location = new Point(33, 345);
+            groupBox3.Location = new Point(29, 259);
+            groupBox3.Margin = new Padding(3, 2, 3, 2);
             groupBox3.Name = "groupBox3";
-            groupBox3.Size = new Size(390, 57);
+            groupBox3.Padding = new Padding(3, 2, 3, 2);
+            groupBox3.Size = new Size(341, 43);
             groupBox3.TabIndex = 15;
             groupBox3.TabStop = false;
             groupBox3.Text = "Email";
@@ -168,9 +179,10 @@
             // 
             txtEmailSignup.BorderStyle = BorderStyle.None;
             txtEmailSignup.Font = new Font("Consolas", 10.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            txtEmailSignup.Location = new Point(68, 26);
+            txtEmailSignup.Location = new Point(60, 20);
+            txtEmailSignup.Margin = new Padding(3, 2, 3, 2);
             txtEmailSignup.Name = "txtEmailSignup";
-            txtEmailSignup.Size = new Size(305, 22);
+            txtEmailSignup.Size = new Size(267, 17);
             txtEmailSignup.TabIndex = 2;
             // 
             // pictureBox4
@@ -178,9 +190,10 @@
             pictureBox4.BackColor = Color.Transparent;
             pictureBox4.ErrorImage = null;
             pictureBox4.Image = Properties.Resources.EmailIcon;
-            pictureBox4.Location = new Point(13, 22);
+            pictureBox4.Location = new Point(11, 16);
+            pictureBox4.Margin = new Padding(3, 2, 3, 2);
             pictureBox4.Name = "pictureBox4";
-            pictureBox4.Size = new Size(42, 29);
+            pictureBox4.Size = new Size(37, 22);
             pictureBox4.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox4.TabIndex = 6;
             pictureBox4.TabStop = false;
@@ -192,9 +205,11 @@
             groupBox2.Controls.Add(pictureBox3);
             groupBox2.Font = new Font("Consolas", 10.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
             groupBox2.ForeColor = Color.White;
-            groupBox2.Location = new Point(33, 279);
+            groupBox2.Location = new Point(29, 209);
+            groupBox2.Margin = new Padding(3, 2, 3, 2);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(390, 57);
+            groupBox2.Padding = new Padding(3, 2, 3, 2);
+            groupBox2.Size = new Size(341, 43);
             groupBox2.TabIndex = 15;
             groupBox2.TabStop = false;
             groupBox2.Text = "Tên hiển thị";
@@ -203,18 +218,20 @@
             // 
             txtDisplaynameSignup.BorderStyle = BorderStyle.None;
             txtDisplaynameSignup.Font = new Font("Consolas", 10.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            txtDisplaynameSignup.Location = new Point(68, 26);
+            txtDisplaynameSignup.Location = new Point(60, 20);
+            txtDisplaynameSignup.Margin = new Padding(3, 2, 3, 2);
             txtDisplaynameSignup.Name = "txtDisplaynameSignup";
-            txtDisplaynameSignup.Size = new Size(305, 22);
+            txtDisplaynameSignup.Size = new Size(267, 17);
             txtDisplaynameSignup.TabIndex = 2;
             // 
             // pictureBox3
             // 
             pictureBox3.BackColor = Color.Transparent;
             pictureBox3.Image = Properties.Resources.AvatarIcon;
-            pictureBox3.Location = new Point(13, 22);
+            pictureBox3.Location = new Point(11, 16);
+            pictureBox3.Margin = new Padding(3, 2, 3, 2);
             pictureBox3.Name = "pictureBox3";
-            pictureBox3.Size = new Size(42, 29);
+            pictureBox3.Size = new Size(37, 22);
             pictureBox3.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox3.TabIndex = 6;
             pictureBox3.TabStop = false;
@@ -226,9 +243,11 @@
             groupBox1.Controls.Add(pictureBox2);
             groupBox1.Font = new Font("Consolas", 10.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
             groupBox1.ForeColor = Color.White;
-            groupBox1.Location = new Point(33, 213);
+            groupBox1.Location = new Point(29, 160);
+            groupBox1.Margin = new Padding(3, 2, 3, 2);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(390, 57);
+            groupBox1.Padding = new Padding(3, 2, 3, 2);
+            groupBox1.Size = new Size(341, 43);
             groupBox1.TabIndex = 14;
             groupBox1.TabStop = false;
             groupBox1.Text = "Tên người dùng";
@@ -237,18 +256,20 @@
             // 
             txtUsernameSignup.BorderStyle = BorderStyle.None;
             txtUsernameSignup.Font = new Font("Consolas", 10.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            txtUsernameSignup.Location = new Point(68, 26);
+            txtUsernameSignup.Location = new Point(60, 20);
+            txtUsernameSignup.Margin = new Padding(3, 2, 3, 2);
             txtUsernameSignup.Name = "txtUsernameSignup";
-            txtUsernameSignup.Size = new Size(305, 22);
+            txtUsernameSignup.Size = new Size(267, 17);
             txtUsernameSignup.TabIndex = 2;
             // 
             // pictureBox2
             // 
             pictureBox2.BackColor = Color.Transparent;
             pictureBox2.Image = Properties.Resources.User_Icon;
-            pictureBox2.Location = new Point(13, 22);
+            pictureBox2.Location = new Point(11, 16);
+            pictureBox2.Margin = new Padding(3, 2, 3, 2);
             pictureBox2.Name = "pictureBox2";
-            pictureBox2.Size = new Size(42, 29);
+            pictureBox2.Size = new Size(37, 22);
             pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox2.TabIndex = 6;
             pictureBox2.TabStop = false;
@@ -259,9 +280,9 @@
             label1.BackColor = Color.Transparent;
             label1.Font = new Font("Consolas", 10.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label1.ForeColor = Color.White;
-            label1.Location = new Point(85, 632);
+            label1.Location = new Point(74, 474);
             label1.Name = "label1";
-            label1.Size = new Size(160, 22);
+            label1.Size = new Size(128, 18);
             label1.TabIndex = 13;
             label1.Text = "Đã có tài khoản";
             label1.TextAlign = ContentAlignment.MiddleCenter;
@@ -277,9 +298,10 @@
             btnLoginSignnup.FlatStyle = FlatStyle.Flat;
             btnLoginSignnup.Font = new Font("Consolas", 10.8F, FontStyle.Bold | FontStyle.Underline, GraphicsUnit.Point, 0);
             btnLoginSignnup.ForeColor = Color.White;
-            btnLoginSignnup.Location = new Point(243, 623);
+            btnLoginSignnup.Location = new Point(213, 467);
+            btnLoginSignnup.Margin = new Padding(3, 2, 3, 2);
             btnLoginSignnup.Name = "btnLoginSignnup";
-            btnLoginSignnup.Size = new Size(110, 39);
+            btnLoginSignnup.Size = new Size(96, 29);
             btnLoginSignnup.TabIndex = 12;
             btnLoginSignnup.Text = "Đăng nhập";
             btnLoginSignnup.UseVisualStyleBackColor = false;
@@ -296,9 +318,10 @@
             btnSignupSignup.FlatStyle = FlatStyle.Flat;
             btnSignupSignup.Font = new Font("Consolas", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnSignupSignup.ForeColor = Color.White;
-            btnSignupSignup.Location = new Point(33, 563);
+            btnSignupSignup.Location = new Point(29, 422);
+            btnSignupSignup.Margin = new Padding(3, 2, 3, 2);
             btnSignupSignup.Name = "btnSignupSignup";
-            btnSignupSignup.Size = new Size(390, 39);
+            btnSignupSignup.Size = new Size(341, 29);
             btnSignupSignup.TabIndex = 10;
             btnSignupSignup.Text = "Đăng ký";
             btnSignupSignup.UseVisualStyleBackColor = false;
@@ -310,9 +333,9 @@
             label2.BackColor = Color.Transparent;
             label2.Font = new Font("Consolas", 22.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label2.ForeColor = Color.FromArgb(105, 203, 253);
-            label2.Location = new Point(179, 162);
+            label2.Location = new Point(157, 122);
             label2.Name = "label2";
-            label2.Size = new Size(99, 43);
+            label2.Size = new Size(79, 36);
             label2.TabIndex = 4;
             label2.Text = "MEnU";
             label2.TextAlign = ContentAlignment.MiddleCenter;
@@ -322,20 +345,22 @@
             pictureBox1.BackColor = Color.Transparent;
             pictureBox1.BackgroundImageLayout = ImageLayout.Zoom;
             pictureBox1.Image = Properties.Resources.MenuLogo;
-            pictureBox1.Location = new Point(146, 30);
+            pictureBox1.Location = new Point(128, 22);
+            pictureBox1.Margin = new Padding(3, 2, 3, 2);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(156, 145);
+            pictureBox1.Size = new Size(136, 109);
             pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox1.TabIndex = 3;
             pictureBox1.TabStop = false;
             // 
             // RegisterUI
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(457, 663);
+            ClientSize = new Size(400, 497);
             Controls.Add(panel1);
             FormBorderStyle = FormBorderStyle.None;
+            Margin = new Padding(3, 2, 3, 2);
             Name = "RegisterUI";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Form1";
