@@ -1,40 +1,29 @@
 ﻿using MEnU.Models;
-using MEnU.Services;
-using MEnU.UserControl;
-using MEnU.UserControls;
 using Newtonsoft.Json.Linq;
-using System.ComponentModel.Design.Serialization;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Web;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
-namespace MEnU.Forms
+namespace MEnU.UserControls
 {
-    public partial class MainHomeUI : Form
+    public partial class ChatListControl : System.Windows.Forms.UserControl
     {
+        public long friendId { get; set; }
+        string? username;
+        string? displayName;
+        string? email;
+        string? avatarURL;
+        int status;
+
         string baseUrl = @"https://unvulgarly-unfueled-mozella.ngrok-free.dev/";
 
-        public MainHomeUI()
+        public ChatListControl()
         {
             InitializeComponent();
-
-            // Ẩn tab bar
-            //tabMenu.Appearance = TabAppearance.FlatButtons;
-            //tabMenu.ItemSize = new Size(0, 1);
-            //tabMenu.SizeMode = TabSizeMode.Fixed;
-            rtxLog.Hide();
-            tabMenu.SelectedIndex = 3;
-
-            //flowLayoutPanel1.Scroll += FlowLayoutPanel1_Scroll;
         }
 
         //
-        // TOKEN-MANIPULATE FUNCTIONS
+        // FUNCTIONS
         //
-
         private void LoadToken(out string accessToken, out string refreshToken)
         {
             accessToken = refreshToken = "";
@@ -50,7 +39,6 @@ namespace MEnU.Forms
             accessToken = parts[0];
             refreshToken = parts[1];
         }
-
         private void SaveToken(string accessToken, string refreshToken)
         {
             string appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
@@ -108,34 +96,40 @@ namespace MEnU.Forms
             return true;
         }
 
-        //
-        // HOME TAB (photo)
-        //
+        public void BindData(MEnU.Models.ConversationPreview conversationPreview)
+        {
+            friendId = conversationPreview.friendId;
 
-        
+            string lastMessage = conversationPreview.lastMessage;
 
-        //
-        // CHAT TAB
-        //
+            if (lastMessage != null && lastMessage.Length > 15)
+            {
+                lastMessage = lastMessage.Substring(0, 15) + "...";
+            }
 
-        
+            lblLastMessage.Text = lastMessage;
+            llbDisplayName.Text = conversationPreview.displayName;
 
-        //
-        // FRIENDS TAB
-        //
+            if (conversationPreview.avatarURL != null) picAvatar.LoadAsync(conversationPreview.avatarURL);
+        }
 
+        public void BindDataRealtime(string lastMessage, long friendIdThatNeedToBeUpdated)
+        {
+            
+        }
 
-        //
-        // SETTINGS TAB
-        //
+        public event Action<User> ChatClicked;
 
-        
+        private void llbDisplayName_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            MEnU.Models.User friend = new MEnU.Models.User();
+            friend.id = friendId;
+            friend.username = username;
+            friend.displayName = displayName;
+            friend.email = email;
+            friend.avatarURL = avatarURL;
 
-        //
-        // LINH TINH
-        //
-
-        
-
+            ChatClicked?.Invoke(friend);
+        }
     }
 }

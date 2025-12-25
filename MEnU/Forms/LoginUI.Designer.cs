@@ -61,9 +61,10 @@
             panel1.Controls.Add(panel2);
             panel1.Controls.Add(label2);
             panel1.Controls.Add(pictureBox1);
-            panel1.Location = new Point(0, -1);
+            panel1.Dock = DockStyle.Fill;
+            panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";
-            panel1.Size = new Size(457, 664);
+            panel1.Size = new Size(457, 663);
             panel1.TabIndex = 0;
             // 
             // label1
@@ -72,11 +73,11 @@
             label1.BackColor = Color.Transparent;
             label1.Font = new Font("Consolas", 10.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label1.ForeColor = Color.White;
-            label1.Location = new Point(71, 632);
+            label1.Location = new Point(89, 632);
             label1.Name = "label1";
             label1.Size = new Size(287, 34);
             label1.TabIndex = 13;
-            label1.Text = "Chưa có tài khoản";
+            label1.Text = "Chưa có tài khoản?";
             label1.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // btnSignupLogin
@@ -90,12 +91,13 @@
             btnSignupLogin.FlatStyle = FlatStyle.Flat;
             btnSignupLogin.Font = new Font("Consolas", 10.8F, FontStyle.Bold | FontStyle.Underline, GraphicsUnit.Point, 0);
             btnSignupLogin.ForeColor = Color.White;
-            btnSignupLogin.Location = new Point(244, 623);
+            btnSignupLogin.Location = new Point(228, 622);
             btnSignupLogin.Name = "btnSignupLogin";
             btnSignupLogin.Size = new Size(217, 44);
             btnSignupLogin.TabIndex = 12;
             btnSignupLogin.Text = "Đăng ký ngay";
             btnSignupLogin.UseVisualStyleBackColor = false;
+            btnSignupLogin.Click += btnSignupLogin_Click;
             // 
             // btnForgetLogin
             // 
@@ -114,6 +116,7 @@
             btnForgetLogin.TabIndex = 11;
             btnForgetLogin.Text = "Quên mật khẩu?";
             btnForgetLogin.UseVisualStyleBackColor = false;
+            btnForgetLogin.Click += btnForgetLogin_Click;
             // 
             // btnLoginLogin
             // 
@@ -201,7 +204,7 @@
             label2.BackColor = Color.Transparent;
             label2.Font = new Font("Consolas", 22.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label2.ForeColor = Color.FromArgb(105, 203, 253);
-            label2.Location = new Point(179, 162);
+            label2.Location = new Point(183, 144);
             label2.Name = "label2";
             label2.Size = new Size(162, 70);
             label2.TabIndex = 4;
@@ -227,11 +230,13 @@
             ClientSize = new Size(457, 663);
             Controls.Add(panel1);
             Font = new Font("Consolas", 10.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            FormBorderStyle = FormBorderStyle.None;
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             Margin = new Padding(4, 3, 4, 3);
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "LoginUI";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Form1";
+            Text = "MEnU - Login";
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             panel3.ResumeLayout(false);

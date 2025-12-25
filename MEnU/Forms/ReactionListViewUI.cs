@@ -1,40 +1,27 @@
 ﻿using MEnU.Models;
-using MEnU.Services;
-using MEnU.UserControl;
 using MEnU.UserControls;
 using Newtonsoft.Json.Linq;
-using System.ComponentModel.Design.Serialization;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Web;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace MEnU.Forms
 {
-    public partial class MainHomeUI : Form
+    public partial class ReactionListViewUI : Form
     {
+        List<Reaction> _reactions;
+
         string baseUrl = @"https://unvulgarly-unfueled-mozella.ngrok-free.dev/";
 
-        public MainHomeUI()
+        public ReactionListViewUI(List<Reaction> reactions)
         {
             InitializeComponent();
-
-            // Ẩn tab bar
-            //tabMenu.Appearance = TabAppearance.FlatButtons;
-            //tabMenu.ItemSize = new Size(0, 1);
-            //tabMenu.SizeMode = TabSizeMode.Fixed;
-            rtxLog.Hide();
-            tabMenu.SelectedIndex = 3;
-
-            //flowLayoutPanel1.Scroll += FlowLayoutPanel1_Scroll;
+            flpReactionList.Controls.Clear();
+            _reactions = reactions;
         }
 
         //
         // TOKEN-MANIPULATE FUNCTIONS
         //
-
         private void LoadToken(out string accessToken, out string refreshToken)
         {
             accessToken = refreshToken = "";
@@ -108,34 +95,86 @@ namespace MEnU.Forms
             return true;
         }
 
-        //
-        // HOME TAB (photo)
-        //
-
         
+        private async void ReactionListViewUI_Load(object sender, EventArgs e)
+        {
+            if (_reactions == null || _reactions.Count == 0)
+            {
+                flpReactionList.Controls.Add(lblNoReactionYet);
+                return;
+            }
 
-        //
-        // CHAT TAB
-        //
+            List<int> danhsach = new List<int>();
 
-        
+            foreach (int n in danhsach)
+            {
+                
+            }
 
-        //
-        // FRIENDS TAB
-        //
+            foreach (var reaction in _reactions)
+            {
+                User userReact = await GetUserInfo(reaction.userId);
 
+                if (userReact == null) continue;
 
-        //
-        // SETTINGS TAB
-        //
+                var item = new ReactListControl();
+                item.BindData(reaction, $"{userReact.displayName}", $"{userReact.avatarURL}");
 
-        
+                flpReactionList.Controls.Add(item);
+            }
+        }
 
-        //
-        // LINH TINH
-        //
+        private async Task<User> GetUserInfo(long userId)
+        {
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    LoadToken(out string accessToken, out string refreshToken);
+                    bool isValid = await VerifyToken(accessToken);
 
-        
+                    client.DefaultRequestHeaders.Authorization =
+                        new AuthenticationHeaderValue("Bearer", accessToken);
 
+                    if (!isValid)
+                    {
+                        var refreshed = await Refresh();
+                        if (!refreshed)
+                        {
+                            MessageBox.Show("Session expired. Please log in again.");
+                            return null;
+                        }
+
+                        LoadToken(out string newAccess, out string _);
+
+                        client.DefaultRequestHeaders.Authorization =
+                            new AuthenticationHeaderValue("Bearer", newAccess);
+                    }
+
+                    var response = await client.GetAsync($"{baseUrl}api/friends/profile/{userId}");
+                    var responseJson = await response.Content.ReadAsStringAsync();
+
+                    var root = JObject.Parse(responseJson);
+                    var success = (bool)root["success"];
+                    var message = (string)root["message"];
+
+                    if (!success)
+                    {
+                        MessageBox.Show("Failed to retrieve user profile: " + message);
+                        return null;
+                    }
+
+                    var user = root["data"].ToObject<User>();
+
+                    return user;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error\r\n{ex.Message}");
+                return null;
+            }
+        }
+    
     }
 }
