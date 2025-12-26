@@ -286,6 +286,83 @@ namespace MEnU.Forms
         // FRIENDS TAB
         //
 
+        private async Task GetAndDisplayFriends()
+        {
+            flpListFriend.Controls.Clear();
+            lblNoFriend.Visible = true;
+
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    LoadToken(out string accessToken, out string refreshToken);
+                    bool isValid = await VerifyToken(accessToken);
+
+                    client.DefaultRequestHeaders.Authorization =
+                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", $"{accessToken}");
+
+                    if (!isValid)
+                    {
+                        var refreshed = await Refresh();
+
+                        if (!refreshed)
+                        {
+                            MessageBox.Show("Session expired. Please log in again.");
+                            return;
+                        }
+
+                        LoadToken(out string newAccess, out string _);
+
+                        client.DefaultRequestHeaders.Authorization =
+                            new AuthenticationHeaderValue("Bearer", newAccess);
+                    }
+
+                    var response = await client.GetAsync($@"{baseUrl}api/user/friends");
+                    var responseJson = await response.Content.ReadAsStringAsync();
+
+                    var root = JObject.Parse(responseJson);
+                    bool success = (bool)root["success"];
+                    string message = root["message"].ToString();
+
+                    if (!success)
+                    {
+                        MessageBox.Show($"Lỗi: {message}");
+                        return;
+                    }
+
+                    var friends = root["data"].ToObject<List<User>>();
+
+                    if (friends.Count == 0)
+                    {
+                        lblNoFriend.Visible = true;
+                        flpListFriend.Controls.Add(lblNoFriend);
+                        return;
+                    }
+
+                    for (int i = 0; i < friends.Count; i++)
+                    {
+                        User user = friends[i];
+
+                        FriendControl item = new FriendControl();
+
+                        item.ChatClicked += f =>
+                        {
+                            // dùng OpenChat;
+                            tabMenu.SelectedIndex = 1;
+                            OpenChat(f.id);
+                        };
+
+                        item.BindData(user);
+
+                        flpListFriend.Controls.Add(item);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
+            }
+        }
 
 
         //
