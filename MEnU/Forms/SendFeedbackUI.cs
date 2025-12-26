@@ -1,34 +1,95 @@
-﻿using MEnU.Models;
-using MEnU.Services;
-using MEnU.UserControl;
-using MEnU.UserControls;
-using Newtonsoft.Json.Linq;
-using System.ComponentModel.Design.Serialization;
+﻿using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography;
 using System.Text;
-using System.Web;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace MEnU.Forms
 {
-    public partial class MainHomeUI : Form
+    public partial class SendFeedbackUI : Form
     {
         string baseUrl = @"https://unvulgarly-unfueled-mozella.ngrok-free.dev/";
 
-        public MainHomeUI()
+        public SendFeedbackUI()
         {
             InitializeComponent();
+        }
 
-            // Ẩn tab bar
-            //tabMenu.Appearance = TabAppearance.FlatButtons;
-            //tabMenu.ItemSize = new Size(0, 1);
-            //tabMenu.SizeMode = TabSizeMode.Fixed;
-            rtxLog.Hide();
+        private async void btnSendFeedback_Click(object sender, EventArgs e)
+        {
+            string messageFeedback = rtxContentFeedback.Text.Trim();
+            
+            if (string.IsNullOrEmpty(messageFeedback))
+            {
+                MessageBox.Show("Vui lòng nhập nội dung phản hồi.");
+                return;
+            }
 
-            //flowLayoutPanel1.Scroll += FlowLayoutPanel1_Scroll;
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    LoadToken(out string accessToken, out string refreshToken);
+                    bool isValid = await VerifyToken(accessToken);
+
+                    client.DefaultRequestHeaders.Authorization =
+                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", $"{accessToken}");
+
+                    if (!isValid)
+                    {
+                        var refreshed = await Refresh();
+                        if (!refreshed)
+                        {
+                            MessageBox.Show("Session expired. Please log in again.");
+                            return;
+                        }
+
+                        LoadToken(out string newAccess, out string _);
+
+                        client.DefaultRequestHeaders.Authorization =
+                            new AuthenticationHeaderValue("Bearer", newAccess);
+                    }
+
+                    var body = new
+                    {
+                        message = messageFeedback
+                    };
+
+                    var content = new StringContent(
+                        Newtonsoft.Json.JsonConvert.SerializeObject(body),
+                        Encoding.UTF8,
+                        "application/json"
+                    );
+
+                    var response = await client.PostAsync(@$"{baseUrl}api/user/feedback", content);
+                    var responseJson = await response.Content.ReadAsStringAsync();
+
+                    var root = JObject.Parse(responseJson);
+
+                    bool success = (bool)root["success"];
+                    string message = root["message"].ToString();
+
+                    if (!success)
+                    {
+                        MessageBox.Show($"{message}");
+                        return;
+                    }
+
+                    MessageBox.Show("Gửi phản hồi thành công.\r\nMEnU cảm ơn những đóng góp của bạn");
+                    this.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
+            }
         }
 
         //
@@ -64,19 +125,6 @@ namespace MEnU.Forms
             string token = $"{accessToken};{refreshToken}";
 
             File.WriteAllText(filePath, token);
-        }
-
-        private void ClearToken()
-        {
-            string appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            string folderPath = Path.Combine(appData, "MEnU");
-            string filePath = Path.Combine(folderPath, "token.txt");
-
-            if (File.Exists(filePath))
-            {
-                File.Delete(filePath);
-            }
-
         }
 
         private async Task<bool> VerifyToken(string accessToken)
@@ -120,42 +168,5 @@ namespace MEnU.Forms
 
             return true;
         }
-
-        //
-        // HOME TAB (photo)
-        //
-
-
-
-        //
-        // CHAT TAB
-        //
-
-
-
-        //
-        // FRIENDS TAB
-        //
-
-
-        
-        //
-        // NOTIFICATIONS TAB
-        //
-
-
-
-        //
-        // SETTINGS TAB
-        //
-
-
-
-        //
-        // LINH TINH
-        //
-
-
-
     }
 }

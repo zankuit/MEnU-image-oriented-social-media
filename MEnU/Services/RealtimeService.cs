@@ -154,7 +154,7 @@ namespace MEnU.Services
                     OnChatReceived?.Invoke(msg);
                     break;
 
-                case "reacion":
+                case "reaction":
                     var reactNoti = obj.ToObject<Notification>();
                     OnReactionReceived?.Invoke(reactNoti);
                     break;
