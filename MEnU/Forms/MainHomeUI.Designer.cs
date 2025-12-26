@@ -93,6 +93,7 @@
             btnChangeInfo = new Button();
             btnSetavt = new Button();
             label9 = new Label();
+            txtNewAvatarPath = new TextBox();
             txtEmail = new TextBox();
             label7 = new Label();
             txtUsername = new TextBox();
@@ -105,7 +106,6 @@
             btnExit = new Button();
             lblUsername = new Label();
             panel2 = new Panel();
-            searchedUsers1 = new MEnU.UserControl.SearchedUsers();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             tabMenu.SuspendLayout();
             tpHome.SuspendLayout();
@@ -128,7 +128,6 @@
             sctFriendView.SuspendLayout();
             flpListFriend.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
-            flpUserSeachedList.SuspendLayout();
             tpNotification.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox4).BeginInit();
             tpSetting.SuspendLayout();
@@ -536,10 +535,10 @@
             tpChat.BackColor = Color.FromArgb(16, 48, 99);
             tpChat.Controls.Add(sctChatView);
             tpChat.Font = new Font("Consolas", 10.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            tpChat.Location = new Point(4, 26);
+            tpChat.Location = new Point(4, 24);
             tpChat.Name = "tpChat";
             tpChat.Padding = new Padding(3);
-            tpChat.Size = new Size(625, 637);
+            tpChat.Size = new Size(625, 639);
             tpChat.TabIndex = 1;
             tpChat.Text = "Chat";
             // 
@@ -653,6 +652,7 @@
             // 
             flowLayoutPanel1.AutoScroll = true;
             flowLayoutPanel1.BackColor = Color.FromArgb(16, 48, 99);
+            flowLayoutPanel1.BorderStyle = BorderStyle.FixedSingle;
             flowLayoutPanel1.FlowDirection = FlowDirection.TopDown;
             flowLayoutPanel1.Font = new Font("Google Sans Mono", 8.249999F, FontStyle.Regular, GraphicsUnit.Point, 0);
             flowLayoutPanel1.Location = new Point(3, 51);
@@ -684,9 +684,9 @@
             tpFriendlist.BackColor = Color.FromArgb(16, 48, 99);
             tpFriendlist.Controls.Add(sctFriendView);
             tpFriendlist.Font = new Font("Consolas", 10.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            tpFriendlist.Location = new Point(4, 26);
+            tpFriendlist.Location = new Point(4, 24);
             tpFriendlist.Name = "tpFriendlist";
-            tpFriendlist.Size = new Size(625, 637);
+            tpFriendlist.Size = new Size(625, 639);
             tpFriendlist.TabIndex = 2;
             tpFriendlist.Text = "Danh sách bạn bè";
             // 
@@ -758,7 +758,6 @@
             // flpUserSeachedList
             // 
             flpUserSeachedList.AutoScroll = true;
-            flpUserSeachedList.Controls.Add(searchedUsers1);
             flpUserSeachedList.FlowDirection = FlowDirection.TopDown;
             flpUserSeachedList.Location = new Point(15, 59);
             flpUserSeachedList.Name = "flpUserSeachedList";
@@ -769,9 +768,10 @@
             // flpListUserRequest
             // 
             flpListUserRequest.AutoScroll = true;
+            flpListUserRequest.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             flpListUserRequest.Location = new Point(15, 277);
             flpListUserRequest.Name = "flpListUserRequest";
-            flpListUserRequest.Size = new Size(300, 337);
+            flpListUserRequest.Size = new Size(305, 337);
             flpListUserRequest.TabIndex = 20;
             // 
             // txtFindUser
@@ -963,6 +963,7 @@
             groupBox1.Controls.Add(btnChangeInfo);
             groupBox1.Controls.Add(btnSetavt);
             groupBox1.Controls.Add(label9);
+            groupBox1.Controls.Add(txtNewAvatarPath);
             groupBox1.Controls.Add(txtEmail);
             groupBox1.Controls.Add(label7);
             groupBox1.Controls.Add(txtUsername);
@@ -993,7 +994,7 @@
             picAvatarSetting.Location = new Point(177, 165);
             picAvatarSetting.Name = "picAvatarSetting";
             picAvatarSetting.Size = new Size(60, 60);
-            picAvatarSetting.SizeMode = PictureBoxSizeMode.Zoom;
+            picAvatarSetting.SizeMode = PictureBoxSizeMode.StretchImage;
             picAvatarSetting.TabIndex = 18;
             picAvatarSetting.TabStop = false;
             // 
@@ -1082,8 +1083,9 @@
             btnSetavt.Name = "btnSetavt";
             btnSetavt.Size = new Size(104, 28);
             btnSetavt.TabIndex = 17;
-            btnSetavt.Text = "Tải ảnh";
+            btnSetavt.Text = "Chọn ảnh";
             btnSetavt.UseVisualStyleBackColor = false;
+            btnSetavt.Click += btnSetavt_Click;
             // 
             // label9
             // 
@@ -1097,6 +1099,16 @@
             label9.TabIndex = 26;
             label9.Text = "Ảnh đại diện";
             label9.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // txtNewAvatarPath
+            // 
+            txtNewAvatarPath.BorderStyle = BorderStyle.None;
+            txtNewAvatarPath.Font = new Font("Consolas", 10.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            txtNewAvatarPath.Location = new Point(10, 229);
+            txtNewAvatarPath.Name = "txtNewAvatarPath";
+            txtNewAvatarPath.ReadOnly = true;
+            txtNewAvatarPath.Size = new Size(227, 17);
+            txtNewAvatarPath.TabIndex = 23;
             // 
             // txtEmail
             // 
@@ -1252,20 +1264,12 @@
             panel2.Size = new Size(126, 22);
             panel2.TabIndex = 19;
             // 
-            // searchedUsers1
-            // 
-            searchedUsers1.Location = new Point(3, 3);
-            searchedUsers1.Name = "searchedUsers1";
-            searchedUsers1.Size = new Size(280, 46);
-            searchedUsers1.TabIndex = 0;
-            // 
             // MainHomeUI
             // 
             AutoScaleDimensions = new SizeF(8F, 17F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(10, 29, 60);
             ClientSize = new Size(783, 664);
-            Controls.Add(rtxLog);
             Controls.Add(panel2);
             Controls.Add(pictureBox2);
             Controls.Add(btnExit);
@@ -1273,6 +1277,7 @@
             Controls.Add(tabMenu);
             Controls.Add(label2);
             Controls.Add(pictureBox1);
+            Controls.Add(rtxLog);
             Font = new Font("Consolas", 10.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Margin = new Padding(4, 3, 4, 3);
@@ -1312,7 +1317,6 @@
             flpListFriend.ResumeLayout(false);
             flpListFriend.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).EndInit();
-            flpUserSeachedList.ResumeLayout(false);
             tpNotification.ResumeLayout(false);
             tpNotification.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox4).EndInit();
@@ -1409,6 +1413,6 @@
         private Button btnSaveUpdateInfo;
         private Button btnSendFeedback;
         private Button btnChangePassword;
-        private UserControl.SearchedUsers searchedUsers1;
+        private TextBox txtNewAvatarPath;
     }
 }

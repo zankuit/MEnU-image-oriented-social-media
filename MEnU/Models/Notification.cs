@@ -13,7 +13,7 @@ namespace MEnU.Models
         public string message { get; set; }
         public string fromUsername { get; set; }
         public string toUsername { get; set; }
-        public long photoId { get; set; }
+        public long? photoId { get; set; }
         public bool seen {  get; set; }
         public DateTimeOffset createdAt {  get; set; }
 

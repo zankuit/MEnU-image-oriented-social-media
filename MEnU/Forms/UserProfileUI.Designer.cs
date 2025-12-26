@@ -126,6 +126,7 @@
             btnDeclineFriendRequest.TabIndex = 21;
             btnDeclineFriendRequest.Text = "Từ chối";
             btnDeclineFriendRequest.UseVisualStyleBackColor = false;
+            btnDeclineFriendRequest.Click += btnDeclineFriendRequest_Click;
             // 
             // lblFriendRequestQuote
             // 
@@ -150,6 +151,7 @@
             btnAcceptFriendRequest.TabIndex = 21;
             btnAcceptFriendRequest.Text = "Chấp nhận";
             btnAcceptFriendRequest.UseVisualStyleBackColor = false;
+            btnAcceptFriendRequest.Click += btnAcceptFriendRequest_Click;
             // 
             // btnDeleteFriend
             // 
@@ -162,6 +164,7 @@
             btnDeleteFriend.TabIndex = 21;
             btnDeleteFriend.Text = "Bo xì :<";
             btnDeleteFriend.UseVisualStyleBackColor = false;
+            btnDeleteFriend.Click += btnDeleteFriend_Click;
             // 
             // lblStatus
             // 

@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             panel1 = new Panel();
+            btnCloseRegister = new Button();
+            chkShowPassword = new CheckBox();
             groupBox5 = new GroupBox();
             txtConfirmpasswordSignup = new TextBox();
             pictureBox6 = new PictureBox();
@@ -67,6 +69,8 @@
             // 
             panel1.BackColor = SystemColors.Control;
             panel1.BackgroundImage = Properties.Resources._8;
+            panel1.Controls.Add(btnCloseRegister);
+            panel1.Controls.Add(chkShowPassword);
             panel1.Controls.Add(groupBox5);
             panel1.Controls.Add(groupBox4);
             panel1.Controls.Add(groupBox3);
@@ -83,6 +87,36 @@
             panel1.Size = new Size(400, 497);
             panel1.TabIndex = 1;
             // 
+            // btnCloseRegister
+            // 
+            btnCloseRegister.BackColor = Color.FromArgb(16, 48, 99);
+            btnCloseRegister.Cursor = Cursors.Hand;
+            btnCloseRegister.FlatAppearance.BorderSize = 0;
+            btnCloseRegister.FlatStyle = FlatStyle.Flat;
+            btnCloseRegister.Font = new Font("Verdana", 16.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnCloseRegister.ForeColor = Color.FromArgb(105, 203, 253);
+            btnCloseRegister.Location = new Point(365, -2);
+            btnCloseRegister.Margin = new Padding(3, 2, 3, 2);
+            btnCloseRegister.Name = "btnCloseRegister";
+            btnCloseRegister.Size = new Size(35, 30);
+            btnCloseRegister.TabIndex = 17;
+            btnCloseRegister.Text = "X";
+            btnCloseRegister.UseVisualStyleBackColor = false;
+            btnCloseRegister.Click += btnCloseRegister_Click;
+            // 
+            // chkShowPassword
+            // 
+            chkShowPassword.AutoSize = true;
+            chkShowPassword.BackColor = Color.FromArgb(16, 48, 99);
+            chkShowPassword.ForeColor = SystemColors.Control;
+            chkShowPassword.Location = new Point(29, 382);
+            chkShowPassword.Name = "chkShowPassword";
+            chkShowPassword.Size = new Size(104, 19);
+            chkShowPassword.TabIndex = 16;
+            chkShowPassword.Text = "Hiện mật khẩu";
+            chkShowPassword.UseVisualStyleBackColor = false;
+            chkShowPassword.CheckedChanged += chkShowPassword_CheckedChanged;
+            // 
             // groupBox5
             // 
             groupBox5.BackColor = Color.Transparent;
@@ -90,7 +124,7 @@
             groupBox5.Controls.Add(pictureBox6);
             groupBox5.Font = new Font("Consolas", 10.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
             groupBox5.ForeColor = Color.White;
-            groupBox5.Location = new Point(29, 358);
+            groupBox5.Location = new Point(29, 334);
             groupBox5.Margin = new Padding(3, 2, 3, 2);
             groupBox5.Name = "groupBox5";
             groupBox5.Padding = new Padding(3, 2, 3, 2);
@@ -106,8 +140,10 @@
             txtConfirmpasswordSignup.Location = new Point(60, 20);
             txtConfirmpasswordSignup.Margin = new Padding(3, 2, 3, 2);
             txtConfirmpasswordSignup.Name = "txtConfirmpasswordSignup";
+            txtConfirmpasswordSignup.PasswordChar = '*';
             txtConfirmpasswordSignup.Size = new Size(267, 17);
             txtConfirmpasswordSignup.TabIndex = 2;
+            txtConfirmpasswordSignup.UseSystemPasswordChar = true;
             // 
             // pictureBox6
             // 
@@ -128,7 +164,7 @@
             groupBox4.Controls.Add(pictureBox5);
             groupBox4.Font = new Font("Consolas", 10.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
             groupBox4.ForeColor = Color.White;
-            groupBox4.Location = new Point(29, 308);
+            groupBox4.Location = new Point(29, 284);
             groupBox4.Margin = new Padding(3, 2, 3, 2);
             groupBox4.Name = "groupBox4";
             groupBox4.Padding = new Padding(3, 2, 3, 2);
@@ -144,8 +180,10 @@
             txtPasswordSignup.Location = new Point(60, 20);
             txtPasswordSignup.Margin = new Padding(3, 2, 3, 2);
             txtPasswordSignup.Name = "txtPasswordSignup";
+            txtPasswordSignup.PasswordChar = '*';
             txtPasswordSignup.Size = new Size(267, 17);
             txtPasswordSignup.TabIndex = 2;
+            txtPasswordSignup.UseSystemPasswordChar = true;
             // 
             // pictureBox5
             // 
@@ -166,7 +204,7 @@
             groupBox3.Controls.Add(pictureBox4);
             groupBox3.Font = new Font("Consolas", 10.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
             groupBox3.ForeColor = Color.White;
-            groupBox3.Location = new Point(29, 259);
+            groupBox3.Location = new Point(29, 235);
             groupBox3.Margin = new Padding(3, 2, 3, 2);
             groupBox3.Name = "groupBox3";
             groupBox3.Padding = new Padding(3, 2, 3, 2);
@@ -205,7 +243,7 @@
             groupBox2.Controls.Add(pictureBox3);
             groupBox2.Font = new Font("Consolas", 10.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
             groupBox2.ForeColor = Color.White;
-            groupBox2.Location = new Point(29, 209);
+            groupBox2.Location = new Point(29, 185);
             groupBox2.Margin = new Padding(3, 2, 3, 2);
             groupBox2.Name = "groupBox2";
             groupBox2.Padding = new Padding(3, 2, 3, 2);
@@ -243,7 +281,7 @@
             groupBox1.Controls.Add(pictureBox2);
             groupBox1.Font = new Font("Consolas", 10.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
             groupBox1.ForeColor = Color.White;
-            groupBox1.Location = new Point(29, 160);
+            groupBox1.Location = new Point(29, 136);
             groupBox1.Margin = new Padding(3, 2, 3, 2);
             groupBox1.Name = "groupBox1";
             groupBox1.Padding = new Padding(3, 2, 3, 2);
@@ -280,11 +318,11 @@
             label1.BackColor = Color.Transparent;
             label1.Font = new Font("Consolas", 10.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label1.ForeColor = Color.White;
-            label1.Location = new Point(74, 474);
+            label1.Location = new Point(88, 473);
             label1.Name = "label1";
-            label1.Size = new Size(128, 18);
+            label1.Size = new Size(136, 18);
             label1.TabIndex = 13;
-            label1.Text = "Đã có tài khoản";
+            label1.Text = "Đã có tài khoản?";
             label1.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // btnLoginSignnup
@@ -298,10 +336,10 @@
             btnLoginSignnup.FlatStyle = FlatStyle.Flat;
             btnLoginSignnup.Font = new Font("Consolas", 10.8F, FontStyle.Bold | FontStyle.Underline, GraphicsUnit.Point, 0);
             btnLoginSignnup.ForeColor = Color.White;
-            btnLoginSignnup.Location = new Point(213, 467);
+            btnLoginSignnup.Location = new Point(223, 468);
             btnLoginSignnup.Margin = new Padding(3, 2, 3, 2);
             btnLoginSignnup.Name = "btnLoginSignnup";
-            btnLoginSignnup.Size = new Size(96, 29);
+            btnLoginSignnup.Size = new Size(90, 29);
             btnLoginSignnup.TabIndex = 12;
             btnLoginSignnup.Text = "Đăng nhập";
             btnLoginSignnup.UseVisualStyleBackColor = false;
@@ -333,7 +371,7 @@
             label2.BackColor = Color.Transparent;
             label2.Font = new Font("Consolas", 22.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label2.ForeColor = Color.FromArgb(105, 203, 253);
-            label2.Location = new Point(157, 122);
+            label2.Location = new Point(157, 98);
             label2.Name = "label2";
             label2.Size = new Size(79, 36);
             label2.TabIndex = 4;
@@ -345,7 +383,7 @@
             pictureBox1.BackColor = Color.Transparent;
             pictureBox1.BackgroundImageLayout = ImageLayout.Zoom;
             pictureBox1.Image = Properties.Resources.MenuLogo;
-            pictureBox1.Location = new Point(128, 22);
+            pictureBox1.Location = new Point(128, -2);
             pictureBox1.Margin = new Padding(3, 2, 3, 2);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(136, 109);
@@ -409,5 +447,7 @@
         private TextBox txtDisplaynameSignup;
         private PictureBox pictureBox3;
         private PictureBox pictureBox4;
+        private CheckBox chkShowPassword;
+        private Button btnCloseRegister;
     }
 }

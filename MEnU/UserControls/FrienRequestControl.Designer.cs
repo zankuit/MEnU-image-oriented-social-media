@@ -48,11 +48,12 @@
             btnRefuseUser.FlatStyle = FlatStyle.Flat;
             btnRefuseUser.Font = new Font("Consolas", 10.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnRefuseUser.ForeColor = Color.White;
-            btnRefuseUser.Location = new Point(247, 11);
+            btnRefuseUser.Location = new Point(232, 11);
             btnRefuseUser.Name = "btnRefuseUser";
             btnRefuseUser.Size = new Size(46, 32);
             btnRefuseUser.TabIndex = 22;
             btnRefuseUser.UseVisualStyleBackColor = false;
+            btnRefuseUser.Click += btnRefuseUser_Click;
             // 
             // btnAcceptUser
             // 
@@ -66,11 +67,12 @@
             btnAcceptUser.FlatStyle = FlatStyle.Flat;
             btnAcceptUser.Font = new Font("Consolas", 10.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnAcceptUser.ForeColor = Color.White;
-            btnAcceptUser.Location = new Point(196, 11);
+            btnAcceptUser.Location = new Point(190, 11);
             btnAcceptUser.Name = "btnAcceptUser";
             btnAcceptUser.Size = new Size(49, 32);
             btnAcceptUser.TabIndex = 21;
             btnAcceptUser.UseVisualStyleBackColor = false;
+            btnAcceptUser.Click += btnAcceptUser_Click;
             // 
             // lblUsernameRequest
             // 
@@ -107,7 +109,7 @@
             picUserRequest.TabIndex = 23;
             picUserRequest.TabStop = false;
             // 
-            // WaitingForAcceptUserControl
+            // FrienRequestControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -117,8 +119,8 @@
             Controls.Add(btnAcceptUser);
             Controls.Add(label1);
             Controls.Add(lblUsernameRequest);
-            Name = "WaitingForAcceptUserControl";
-            Size = new Size(297, 55);
+            Name = "FrienRequestControl";
+            Size = new Size(275, 55);
             ((System.ComponentModel.ISupportInitialize)picUserRequest).EndInit();
             ResumeLayout(false);
             PerformLayout();

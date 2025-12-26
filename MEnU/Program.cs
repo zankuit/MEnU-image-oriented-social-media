@@ -1,6 +1,8 @@
 ﻿using MEnU.Forms;
+using MEnU.Models;
 using Newtonsoft.Json.Linq;
 using System.Net.Http.Headers;
+using System.Web;
 
 namespace MEnU
 {
@@ -15,27 +17,29 @@ namespace MEnU
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            //if (args.Length > 0)
-            //{
-            //    // args[0] sẽ là: menuapp://reset-password?token=ABC123
-            //    var uri = new Uri(args[0]);
-            //    var token = HttpUtility.ParseQueryString(uri.Query).Get("token");
 
-            //    //Chỗ này mở form reset password bằng deeplink và truyền token vào, chưa làm
-            //    return;
-            //}
+            if (args.Length > 0)
+            {
+                // args[0] sẽ là: menuapp://reset-password?token=ABC123
+                var uri = new Uri(args[0]);
+                var token = HttpUtility.ParseQueryString(uri.Query).Get("token");
 
-            //if (LoadToken(out string accessToken, out string refreshToken))
-            //{
-            //    var success = VerifyToken(accessToken).GetAwaiter().GetResult();
-            //    if (success)
-            //    {
-            //        Application.Run(new MainHomeUI());
-            //        return;
-            //    }
-            //}
+                //Chỗ này mở form reset password bằng deeplink
+                Application.Run(new ResetPasswordUI(token));
+                return;
+            }
 
-            Application.Run(new MainHomeUI());
+            if (LoadToken(out string accessToken, out string refreshToken))
+            {
+                var success = VerifyToken(accessToken).GetAwaiter().GetResult();
+                if (success)
+                {
+                    Application.Run(new MainHomeUI());
+                    return;
+                }
+            }
+
+            Application.Run(new LoginUI()); 
         }
         static async Task<bool> VerifyToken(string accessToken)
         {
@@ -59,7 +63,7 @@ namespace MEnU
                 MessageBox.Show("Không thể kết nối đến server: " + ex.Message, "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
-
+            
         }
 
         static bool LoadToken(out string accessToken, out string refreshToken)

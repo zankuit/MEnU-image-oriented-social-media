@@ -2,17 +2,19 @@
 using Newtonsoft.Json.Linq;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace MEnU.UserControls
 {
     public partial class ChatListControl : System.Windows.Forms.UserControl
     {
         public long friendId { get; set; }
-        string? username;
-        string? displayName;
-        string? email;
-        string? avatarURL;
-        int status;
+        public string? username { get; set; }
+        public string? displayName { get; set; }
+        public string? email { get; set; }
+        public string? avatarURL { get; set; }
+        public bool hasUnread { get; set; }
 
         string baseUrl = @"https://unvulgarly-unfueled-mozella.ngrok-free.dev/";
 
@@ -24,6 +26,16 @@ namespace MEnU.UserControls
         //
         // FUNCTIONS
         //
+        public void UpdateLastedMessageRealtime(string lastedMessage)
+        {
+            if (lastedMessage != null && lastedMessage.Length > 15)
+            {
+                lastedMessage = lastedMessage.Substring(0, 15) + "...";
+            }
+
+            lblLastMessage.Text = lastedMessage;
+        }
+
         private void LoadToken(out string accessToken, out string refreshToken)
         {
             accessToken = refreshToken = "";
@@ -96,9 +108,26 @@ namespace MEnU.UserControls
             return true;
         }
 
-        public void BindData(MEnU.Models.ConversationPreview conversationPreview)
+        public void SetSeen(bool hasUnread)
+        {
+            lblLastMessage.ForeColor = hasUnread ? Color.White : Color.Silver;
+
+            // Đổi Bold
+            FontStyle style = hasUnread ? FontStyle.Bold : FontStyle.Regular;
+
+            lblUnseenStatus.Visible = hasUnread ? true : false;
+
+            if (lblLastMessage.Font.Style != style)
+            {
+                lblLastMessage.Font = new Font(lblLastMessage.Font, style);
+            }
+        }
+
+        public async Task BindData(MEnU.Models.ConversationPreview conversationPreview)
         {
             friendId = conversationPreview.friendId;
+            username = conversationPreview.username;
+            hasUnread = conversationPreview.hasUnread;
 
             string lastMessage = conversationPreview.lastMessage;
 
@@ -107,21 +136,20 @@ namespace MEnU.UserControls
                 lastMessage = lastMessage.Substring(0, 15) + "...";
             }
 
-            lblLastMessage.Text = lastMessage;
+            SetSeen(conversationPreview.hasUnread);
+
             llbDisplayName.Text = conversationPreview.displayName;
+            lblLastMessage.Text = lastMessage;
 
             if (conversationPreview.avatarURL != null) picAvatar.LoadAsync(conversationPreview.avatarURL);
         }
 
-        public void BindDataRealtime(string lastMessage, long friendIdThatNeedToBeUpdated)
-        {
-            
-        }
-
         public event Action<User> ChatClicked;
 
-        private void llbDisplayName_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private async void llbDisplayName_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
+            if (hasUnread == true) await Seen(friendId);
+
             MEnU.Models.User friend = new MEnU.Models.User();
             friend.id = friendId;
             friend.username = username;
@@ -129,7 +157,45 @@ namespace MEnU.UserControls
             friend.email = email;
             friend.avatarURL = avatarURL;
 
+            SetSeen(false);
+
             ChatClicked?.Invoke(friend);
+        }
+
+        private async Task Seen(long friendId)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                LoadToken(out string accessToken, out string refreshToken);
+                bool isValid = await VerifyToken(accessToken);
+
+                client.DefaultRequestHeaders.Authorization =
+                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", $"{accessToken}");
+
+                if (!isValid)
+                {
+                    var refreshed = await Refresh();
+                    if (!refreshed)
+                    {
+                        MessageBox.Show("Session expired. Please log in again.");
+                        return;
+                    }
+
+                    LoadToken(out string newAccess, out string _);
+
+                    client.DefaultRequestHeaders.Authorization =
+                        new AuthenticationHeaderValue("Bearer", newAccess);
+                }
+
+                var request = new HttpRequestMessage(
+                    HttpMethod.Put,
+                    $"{baseUrl}api/message/{friendId}/seen"
+                );
+
+                request.Content = null;
+
+                var response = await client.SendAsync(request);
+            }
         }
     }
 }
