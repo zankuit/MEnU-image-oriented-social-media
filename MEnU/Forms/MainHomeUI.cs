@@ -279,7 +279,179 @@ namespace MEnU.Forms
         //
         // CHAT TAB
         //
+        bool isInChatTab = false;
 
+        long currentChatUserId;
+        int currentPage;
+        bool isLoadingOldMessages;
+        bool hasMoreMessages = true;
+
+        string myAvatarUrl;
+        string myUsername;
+
+        string friendAvatarUrl;
+        string friendDisplayName;
+        string currentFriendUsername;
+        long currentFriendId;
+
+        private async void OpenChat(long userId)
+        {
+            flowLayoutPanel1.Visible = true;
+
+            currentChatUserId = userId;
+            currentPage = 0;
+            isLoadingOldMessages = false;
+            hasMoreMessages = true;
+
+            flowLayoutPanel1.SuspendLayout();
+            flowLayoutPanel1.Controls.Clear();
+            flowLayoutPanel1.ResumeLayout();
+            currentPage = 0;
+
+            try
+            {
+                // 3. Load info của mình (1 lần)
+                var me = await GetMyInfo();
+                myAvatarUrl = me.avatarURL;
+                myUsername = me.username;
+
+                // 4. Load profile friend
+                await LoadFriendProfile(userId);
+
+                // 5. Load page 0 (20 tin gần nhất)
+                await LoadMessagesPage(
+                    userId,
+                    page: 0,
+                    isFirstLoad: true
+                );
+
+                btnSendContent.Visible = true;
+                txtContent.Visible = true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Không thể mở cuộc trò chuyện: " + ex.Message);
+            }
+        }
+
+        private async Task<List<Messsage>> FetchMessages(long friendId, int page)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                LoadToken(out string accessToken, out _);
+                bool isValid = await VerifyToken(accessToken);
+
+                client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", accessToken);
+
+                if (!isValid)
+                {
+                    var refreshed = await Refresh();
+
+                    if (!refreshed)
+                    {
+                        MessageBox.Show("Session expired. Please log in again.");
+                        return null;
+                    }
+
+                    LoadToken(out string newAccess, out string _);
+
+                    client.DefaultRequestHeaders.Authorization =
+                        new AuthenticationHeaderValue("Bearer", newAccess);
+                }
+
+                var builder = new UriBuilder(
+                    $"{baseUrl}api/message/{friendId}/messages"
+                );
+
+                var query = HttpUtility.ParseQueryString(builder.Query);
+                query["page"] = page.ToString();
+                query["size"] = "20";
+                builder.Query = query.ToString();
+
+                var response = await client.GetAsync(builder.Uri);
+
+                var json = await response.Content.ReadAsStringAsync();
+                var root = JObject.Parse(json);
+
+                if (!(bool)root["success"])
+                    throw new Exception((string)root["message"]);
+
+                return root["data"]["content"].ToObject<List<Messsage>>();
+            }
+        }
+
+        private async Task LoadMessagesPage(long friendId, int page, bool isFirstLoad)
+        {
+            if (isLoadingOldMessages) return;
+            if (!hasMoreMessages) return;
+
+            isLoadingOldMessages = true;
+
+            try
+            {
+                var messages = await FetchMessages(friendId, page);
+
+                // TRƯỜNG HỢP QUAN TRỌNG NHẤT
+                if (messages.Count == 0 || messages == null)
+                {
+                    hasMoreMessages = false;
+                    isLoadingOldMessages = false;
+                    return;
+                }
+
+                messages.Reverse(); // oldest → newest
+
+                int oldHeight = flowLayoutPanel1.DisplayRectangle.Height;
+
+                flowLayoutPanel1.SuspendLayout();
+
+                if (isFirstLoad)
+                {
+                    foreach (var msg in messages)
+                    {
+                        flowLayoutPanel1.Controls.Add(
+                            await CreateMessageBubble(msg)
+                        );
+                    }
+                }
+                else
+                {
+                    int index = 0;
+                    foreach (var msg in messages)
+                    {
+                        var bubble = await CreateMessageBubble(msg);
+                        flowLayoutPanel1.Controls.Add(bubble);
+                        flowLayoutPanel1.Controls.SetChildIndex(bubble, index++);
+                    }
+                }
+
+                flowLayoutPanel1.ResumeLayout();
+
+                if (isFirstLoad)
+                {
+                    flowLayoutPanel1.ScrollControlIntoView(
+                        flowLayoutPanel1.Controls[^1]
+                    );
+                }
+                else
+                {
+                    int newHeight = flowLayoutPanel1.DisplayRectangle.Height;
+                    flowLayoutPanel1.VerticalScroll.Value +=
+                        (newHeight - oldHeight);
+                }
+
+                // Nếu ít hơn size (20) → cũng là hết
+                if (messages.Count < 20)
+                    hasMoreMessages = false;
+
+            }
+            finally
+            {
+                isLoadingOldMessages = false;
+            }
+
+        }
 
 
         //
