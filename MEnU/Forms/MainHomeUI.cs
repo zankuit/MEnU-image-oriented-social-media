@@ -552,7 +552,7 @@ namespace MEnU.Forms
         //
         // LINH TINH
         //
-
+        RealtimeService _realtime;
 
 
     }
