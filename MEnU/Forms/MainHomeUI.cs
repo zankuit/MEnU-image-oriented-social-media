@@ -275,7 +275,121 @@ namespace MEnU.Forms
                 MessageBox.Show($"Error: {ex.Message}");
             }
         }
+        private void btnLoadimage_Click(object sender, EventArgs e)
+        {
+            new UploadPhotoUI().ShowDialog();
+        }
 
+        private async Task LoadHomeData()
+        {
+            DisableHomeComponent();
+            lblNoPhotoYet.Visible = false;
+
+            currentPhotoPage = 0;
+
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    LoadToken(out string accessToken, out string refreshToken);
+                    bool isValid = await VerifyToken(accessToken);
+
+                    client.DefaultRequestHeaders.Authorization =
+                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", $"{accessToken}");
+
+                    if (!isValid)
+                    {
+                        var refreshed = await Refresh();
+
+                        if (!refreshed)
+                        {
+                            MessageBox.Show("Session expired. Please log in again.");
+                            return;
+                        }
+
+                        LoadToken(out string newAccess, out string _);
+
+                        client.DefaultRequestHeaders.Authorization =
+                            new AuthenticationHeaderValue("Bearer", newAccess);
+                    }
+
+                    var response = await client.GetAsync($@"{baseUrl}api/photos/home");
+                    var responseJson = await response.Content.ReadAsStringAsync();
+
+                    var root = JObject.Parse(responseJson);
+                    bool success = (bool)root["success"];
+                    string message = root["message"].ToString();
+
+                    if (!success)
+                    {
+                        MessageBox.Show($"Lỗi xảy ra khi load ảnh: {message}");
+                        return;
+                    }
+
+                    if (message[0] == 'N')
+                    {
+                        lblNoPhotoYet.Visible = true;
+                        return;
+                    }
+
+                    lblNoPhotoYet.Visible = false;
+
+                    var photo = root["data"].ToObject<Photo>();
+
+                    currentPhotoId = photo.photoId;
+
+                    picImage.LoadAsync(photo.photoURL);
+                    txtShowCaption.Text = photo.caption;
+
+                    if (photo.ownerAvatarURL != null) picAvatarPost.LoadAsync(photo.ownerAvatarURL);
+                    lblDisplayNamePost.Text = photo.ownerDisplayName;
+                    lblTimePost.Text = ToTimeAgo(photo.createdAt);
+
+                    EnableHomeComponent();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
+            }
+        }
+
+        private async void btnRefreshHome_Click(object sender, EventArgs e)
+        {
+            await LoadHomeData();
+        }
+
+        private void DisableHomeComponent()
+        {
+            picImage.Visible = false;
+            picAvatarPost.Visible = false;
+            lblDisplayNamePost.Visible = false;
+            lblTimePost.Visible = false;
+            llbViewReactions.Visible = false;
+            txtShowCaption.Visible = false;
+            txtReactChat.Visible = false;
+            btnReactHaha.Visible = false;
+            btnReactHeart.Visible = false;
+            btnReactHug.Visible = false;
+            btnReactSad.Visible = false;
+            btnSendReactChat.Visible = false;
+        }
+
+        private void EnableHomeComponent()
+        {
+            picImage.Visible = true;
+            picAvatarPost.Visible = true;
+            lblDisplayNamePost.Visible = true;
+            lblTimePost.Visible = true;
+            llbViewReactions.Visible = true;
+            txtShowCaption.Visible = true;
+            txtReactChat.Visible = true;
+            btnReactHaha.Visible = true;
+            btnReactHeart.Visible = true;
+            btnReactHug.Visible = true;
+            btnReactSad.Visible = true;
+            btnSendReactChat.Visible = true;
+        }
         //
         // CHAT TAB
         //
