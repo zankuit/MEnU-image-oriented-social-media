@@ -21,10 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="FirebaseAuthentication.net" Version="4.1.0" />
     <PackageReference Include="Guna.UI2.WinForms" Version="2.0.4.7" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.10" />
@@ -44,19 +40,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Forms\ForgetPassword.cs">
+    <Compile Update="OldForms\ForgetPassword.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Forms\ForgetPassword2.cs">
+    <Compile Update="OldForms\ForgetPassword2.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Forms\Home.cs">
+    <Compile Update="OldForms\Home.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Forms\Login.cs">
+    <Compile Update="OldForms\Login.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Forms\Register.cs">
+    <Compile Update="OldForms\Register.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Properties\Resources.Designer.cs">

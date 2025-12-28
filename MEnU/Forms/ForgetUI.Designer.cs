@@ -54,8 +54,9 @@
             panel1.Controls.Add(label2);
             panel1.Controls.Add(pictureBox1);
             panel1.Location = new Point(0, -1);
+            panel1.Margin = new Padding(3, 2, 3, 2);
             panel1.Name = "panel1";
-            panel1.Size = new Size(457, 664);
+            panel1.Size = new Size(400, 498);
             panel1.TabIndex = 1;
             // 
             // btnLoginForget
@@ -69,12 +70,14 @@
             btnLoginForget.FlatStyle = FlatStyle.Flat;
             btnLoginForget.Font = new Font("Consolas", 10.8F, FontStyle.Bold | FontStyle.Underline, GraphicsUnit.Point, 0);
             btnLoginForget.ForeColor = Color.White;
-            btnLoginForget.Location = new Point(173, 623);
+            btnLoginForget.Location = new Point(151, 467);
+            btnLoginForget.Margin = new Padding(3, 2, 3, 2);
             btnLoginForget.Name = "btnLoginForget";
-            btnLoginForget.Size = new Size(110, 39);
+            btnLoginForget.Size = new Size(96, 29);
             btnLoginForget.TabIndex = 15;
             btnLoginForget.Text = "Đăng nhập";
             btnLoginForget.UseVisualStyleBackColor = false;
+            btnLoginForget.Click += btnLoginForget_Click;
             // 
             // label1
             // 
@@ -82,9 +85,9 @@
             label1.BackColor = Color.Transparent;
             label1.Font = new Font("Consolas", 10.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label1.ForeColor = Color.White;
-            label1.Location = new Point(33, 246);
+            label1.Location = new Point(29, 184);
             label1.Name = "label1";
-            label1.Size = new Size(110, 22);
+            label1.Size = new Size(88, 18);
             label1.TabIndex = 14;
             label1.Text = "Nhập email";
             label1.TextAlign = ContentAlignment.MiddleCenter;
@@ -100,30 +103,34 @@
             btnSendForget.FlatStyle = FlatStyle.Flat;
             btnSendForget.Font = new Font("Consolas", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnSendForget.ForeColor = Color.White;
-            btnSendForget.Location = new Point(33, 360);
+            btnSendForget.Location = new Point(29, 270);
+            btnSendForget.Margin = new Padding(3, 2, 3, 2);
             btnSendForget.Name = "btnSendForget";
-            btnSendForget.Size = new Size(390, 39);
+            btnSendForget.Size = new Size(341, 29);
             btnSendForget.TabIndex = 10;
             btnSendForget.Text = "Gửi";
             btnSendForget.UseVisualStyleBackColor = false;
+            btnSendForget.Click += btnSendForget_Click;
             // 
             // panel2
             // 
             panel2.BackColor = Color.Transparent;
             panel2.Controls.Add(pictureBox2);
             panel2.Controls.Add(txtEmailLogin);
-            panel2.Location = new Point(33, 271);
+            panel2.Location = new Point(29, 203);
+            panel2.Margin = new Padding(3, 2, 3, 2);
             panel2.Name = "panel2";
-            panel2.Size = new Size(390, 50);
+            panel2.Size = new Size(341, 38);
             panel2.TabIndex = 8;
             // 
             // pictureBox2
             // 
             pictureBox2.BackColor = Color.Transparent;
             pictureBox2.Image = Properties.Resources.EmailIcon;
-            pictureBox2.Location = new Point(11, 12);
+            pictureBox2.Location = new Point(10, 9);
+            pictureBox2.Margin = new Padding(3, 2, 3, 2);
             pictureBox2.Name = "pictureBox2";
-            pictureBox2.Size = new Size(48, 28);
+            pictureBox2.Size = new Size(42, 21);
             pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox2.TabIndex = 6;
             pictureBox2.TabStop = false;
@@ -132,9 +139,10 @@
             // 
             txtEmailLogin.BorderStyle = BorderStyle.None;
             txtEmailLogin.Font = new Font("Consolas", 10.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            txtEmailLogin.Location = new Point(65, 15);
+            txtEmailLogin.Location = new Point(57, 11);
+            txtEmailLogin.Margin = new Padding(3, 2, 3, 2);
             txtEmailLogin.Name = "txtEmailLogin";
-            txtEmailLogin.Size = new Size(305, 22);
+            txtEmailLogin.Size = new Size(267, 17);
             txtEmailLogin.TabIndex = 2;
             // 
             // label2
@@ -143,9 +151,9 @@
             label2.BackColor = Color.Transparent;
             label2.Font = new Font("Consolas", 22.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label2.ForeColor = Color.FromArgb(105, 203, 253);
-            label2.Location = new Point(179, 162);
+            label2.Location = new Point(157, 122);
             label2.Name = "label2";
-            label2.Size = new Size(99, 43);
+            label2.Size = new Size(79, 36);
             label2.TabIndex = 4;
             label2.Text = "MEnU";
             label2.TextAlign = ContentAlignment.MiddleCenter;
@@ -155,20 +163,22 @@
             pictureBox1.BackColor = Color.Transparent;
             pictureBox1.BackgroundImageLayout = ImageLayout.Zoom;
             pictureBox1.Image = Properties.Resources.MenuLogo;
-            pictureBox1.Location = new Point(146, 30);
+            pictureBox1.Location = new Point(128, 22);
+            pictureBox1.Margin = new Padding(3, 2, 3, 2);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(156, 145);
+            pictureBox1.Size = new Size(136, 109);
             pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox1.TabIndex = 3;
             pictureBox1.TabStop = false;
             // 
             // ForgetUI
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(457, 663);
+            ClientSize = new Size(400, 497);
             Controls.Add(panel1);
             FormBorderStyle = FormBorderStyle.None;
+            Margin = new Padding(3, 2, 3, 2);
             Name = "ForgetUI";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Form1";

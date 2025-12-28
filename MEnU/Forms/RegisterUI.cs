@@ -1,13 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace MEnU.Forms
 {
@@ -16,6 +8,7 @@ namespace MEnU.Forms
         public RegisterUI()
         {
             InitializeComponent();
+            chkShowPassword.Checked = false;
         }
 
         private async void btnSignupSignup_Click(object sender, EventArgs e)
@@ -75,6 +68,31 @@ namespace MEnU.Forms
         {
             this.Hide();
             new LoginUI().Show();
+        }
+
+        private void chkShowPassword_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkShowPassword.Checked)
+            {
+                txtPasswordSignup.UseSystemPasswordChar = false;
+                txtConfirmpasswordSignup.UseSystemPasswordChar = false;
+
+                txtPasswordSignup.PasswordChar = '\0';
+                txtConfirmpasswordSignup.PasswordChar = '\0';
+            }
+            else
+            {
+                txtPasswordSignup.UseSystemPasswordChar = true;
+                txtConfirmpasswordSignup.UseSystemPasswordChar = true;
+
+                txtPasswordSignup.PasswordChar = '*';
+                txtConfirmpasswordSignup.PasswordChar = '*';
+            }
+        }
+
+        private void btnCloseRegister_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
     }
 }
