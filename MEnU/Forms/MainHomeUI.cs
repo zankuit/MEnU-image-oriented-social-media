@@ -536,6 +536,63 @@ namespace MEnU.Forms
             }
         }
 
+        private async Task<List<User>> GetFriends()
+        {
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    LoadToken(out string accessToken, out string refreshToken);
+                    bool isValid = await VerifyToken(accessToken);
+
+                    client.DefaultRequestHeaders.Authorization =
+                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", $"{accessToken}");
+
+                    if (!isValid)
+                    {
+                        var refreshed = await Refresh();
+
+                        if (!refreshed)
+                        {
+                            MessageBox.Show("Session expired. Please log in again.");
+                            return new List<User>();
+                        }
+
+                        LoadToken(out string newAccess, out string _);
+
+                        client.DefaultRequestHeaders.Authorization =
+                            new AuthenticationHeaderValue("Bearer", newAccess);
+                    }
+
+                    var response = await client.GetAsync($@"{baseUrl}api/user/friends");
+                    var responseJson = await response.Content.ReadAsStringAsync();
+
+                    var root = JObject.Parse(responseJson);
+                    bool success = (bool)root["success"];
+                    string message = root["message"].ToString();
+
+                    if (!success)
+                    {
+                        MessageBox.Show($"Lỗi: {message}");
+                        return new List<User>();
+                    }
+
+                    var friends = root["data"].ToObject<List<User>>();
+
+                    if (friends.Count == 0)
+                    {
+                        return new List<User>();
+                    }
+
+                    return friends;
+                }
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
 
         //
         // NOTIFICATIONS TAB
