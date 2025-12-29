@@ -390,6 +390,141 @@ namespace MEnU.Forms
             btnReactSad.Visible = true;
             btnSendReactChat.Visible = true;
         }
+        private async void btnSendReactChat_Click(object sender, EventArgs e)
+        {
+            string comment = txtReactChat.Text.Trim();
+
+            if (String.IsNullOrEmpty(comment)) return;
+
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    LoadToken(out string accessToken, out string refreshToken);
+                    bool isValid = await VerifyToken(accessToken);
+
+                    client.DefaultRequestHeaders.Authorization =
+                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", $"{accessToken}");
+
+                    if (!isValid)
+                    {
+                        var refreshed = await Refresh();
+                        if (!refreshed)
+                        {
+                            MessageBox.Show("Session expired. Please log in again.");
+                            return;
+                        }
+
+                        LoadToken(out string newAccess, out string _);
+
+                        client.DefaultRequestHeaders.Authorization =
+                            new AuthenticationHeaderValue("Bearer", newAccess);
+                    }
+
+                    var body = new
+                    {
+                        comment = comment
+                    };
+
+                    var content = new StringContent(
+                        Newtonsoft.Json.JsonConvert.SerializeObject(body),
+                        Encoding.UTF8,
+                        "application/json");
+
+                    var response = await client.PostAsync($"{baseUrl}api/photos/{currentPhotoId}/comment", content);
+                    var responseJson = await response.Content.ReadAsStringAsync();
+
+                    var root = JObject.Parse(responseJson);
+
+                    bool success = (bool)root["success"];
+                    string message = root["message"].ToString();
+
+                    if (!success)
+                    {
+                        MessageBox.Show("Lỗi khi gửi comment" + message);
+                        return;
+                    }
+
+                    MessageBox.Show("Gửi tin nhắn thành công");
+                    txtReactChat.Clear();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
+            }
+        }
+
+        private async void btnReactHeart_Click(object sender, EventArgs e)
+        {
+            await ReactPhoto(currentPhotoId, "heart");
+        }
+
+        private async void btnReactHaha_Click(object sender, EventArgs e)
+        {
+            await ReactPhoto(currentPhotoId, "haha");
+        }
+
+        private async void btnReactHug_Click(object sender, EventArgs e)
+        {
+            await ReactPhoto(currentPhotoId, "hug");
+        }
+
+        private async void btnReactSad_Click(object sender, EventArgs e)
+        {
+            await ReactPhoto(currentPhotoId, "sad");
+        }
+
+        private async Task ReactPhoto(long photoId, string reaction)
+        {
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    LoadToken(out string accessToken, out string refreshToken);
+                    bool isValid = await VerifyToken(accessToken);
+
+                    client.DefaultRequestHeaders.Authorization =
+                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", $"{accessToken}");
+
+                    if (!isValid)
+                    {
+                        var refreshed = await Refresh();
+                        if (!refreshed)
+                        {
+                            MessageBox.Show("Session expired. Please log in again.");
+                            return;
+                        }
+
+                        LoadToken(out string newAccess, out string _);
+
+                        client.DefaultRequestHeaders.Authorization =
+                            new AuthenticationHeaderValue("Bearer", newAccess);
+                    }
+
+                    var response = await client.PostAsync(
+                        $"{baseUrl}api/photos/reactions/{photoId}?emoji={reaction}", null);
+                    var responseJson = await response.Content.ReadAsStringAsync();
+
+                    var root = JObject.Parse(responseJson);
+
+                    bool success = (bool)root["success"];
+                    string message = root["message"].ToString();
+
+                    if (!success)
+                    {
+                        MessageBox.Show("Lỗi khi gửi reaction" + message);
+                        return;
+                    }
+
+                    MessageBox.Show("Đã gửi react!");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
+            }
+        }
         //
         // CHAT TAB
         //
