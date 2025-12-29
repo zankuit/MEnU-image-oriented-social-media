@@ -650,6 +650,142 @@ namespace MEnU.Forms
             }
         }
 
+        private async Task<List<User>> GetFriends()
+        {
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    LoadToken(out string accessToken, out string refreshToken);
+                    bool isValid = await VerifyToken(accessToken);
+
+                    client.DefaultRequestHeaders.Authorization =
+                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", $"{accessToken}");
+
+                    if (!isValid)
+                    {
+                        var refreshed = await Refresh();
+
+                        if (!refreshed)
+                        {
+                            MessageBox.Show("Session expired. Please log in again.");
+                            return new List<User>();
+                        }
+
+                        LoadToken(out string newAccess, out string _);
+
+                        client.DefaultRequestHeaders.Authorization =
+                            new AuthenticationHeaderValue("Bearer", newAccess);
+                    }
+
+                    var response = await client.GetAsync($@"{baseUrl}api/user/friends");
+                    var responseJson = await response.Content.ReadAsStringAsync();
+
+                    var root = JObject.Parse(responseJson);
+                    bool success = (bool)root["success"];
+                    string message = root["message"].ToString();
+
+                    if (!success)
+                    {
+                        MessageBox.Show($"Lỗi: {message}");
+                        return new List<User>();
+                    }
+
+                    var friends = root["data"].ToObject<List<User>>();
+
+                    if (friends.Count == 0)
+                    {
+                        return new List<User>();
+                    }
+
+                    return friends;
+                }
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        private async Task DisplayFriendsWhoAreRequesting()
+        {
+            flpListUserRequest.Controls.Clear();
+
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    LoadToken(out string accessToken, out _);
+                    bool isValid = await VerifyToken(accessToken);
+
+                    client.DefaultRequestHeaders.Authorization =
+                        new AuthenticationHeaderValue("Bearer", accessToken);
+
+                    if (!isValid)
+                    {
+                        var refreshed = await Refresh();
+
+                        if (!refreshed)
+                        {
+                            MessageBox.Show("Session expired. Please log in again.");
+                            return;
+                        }
+
+                        LoadToken(out string newAccess, out string _);
+
+                        client.DefaultRequestHeaders.Authorization =
+                            new AuthenticationHeaderValue("Bearer", newAccess);
+                    }
+
+                    var response = await client.GetAsync($"{baseUrl}api/friends/pending");
+                    var responseJson = await response.Content.ReadAsStringAsync();
+
+                    var root = JObject.Parse(responseJson);
+                    var success = (bool)root["success"];
+                    var message = root["message"].ToString();
+
+                    var friendRequests = root["data"].ToObject<List<FriendRequest>>();
+
+                    if (!success)
+                    {
+                        MessageBox.Show("Không thể load yêu cầu kết bạn: " + message);
+                    }
+
+                    if (friendRequests.Count == 0 || friendRequests == null) return;
+
+                    foreach (var fr in friendRequests)
+                    {
+                        var item = new FrienRequestControl();
+                        item.BindData(fr);
+
+                        item.AcceptClicked += friendId =>
+                        {
+                            BeginInvoke(new Action(async () =>
+                            {
+                                await AcceptRequest(friendId);
+                                await DisplayFriendsWhoAreRequesting();
+                            }));
+                        };
+
+                        item.RejectClicked += friendId =>
+                        {
+                            BeginInvoke(new Action(async () =>
+                            {
+                                await RejectRequest(friendId);
+                                await DisplayFriendsWhoAreRequesting();
+                            }));
+                        };
+
+                        flpListUserRequest.Controls.Add(item);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi khi load yêu cầu kết bạn: " + ex.Message);
+            }
+
+        }
 
         //
         // NOTIFICATIONS TAB
@@ -660,7 +796,46 @@ namespace MEnU.Forms
         //
         // SETTINGS TAB
         //
+        string usernameSetting;
+        string displayNameSetting;
+        string emailSetting;
+        string avatarUrlSetting;
 
+        private async Task DisplayUserInfoInSetting()
+        {
+            try
+            {
+                User me = await GetMyInfo();
+
+                usernameSetting = me.username;
+                displayNameSetting = me.displayName;
+                emailSetting = me.email;
+                avatarUrlSetting = me.avatarURL;
+
+                if (me.avatarURL != null) picAvatarSetting.LoadAsync(me.avatarURL);
+
+                txtUsername.Text = me.username;
+                txtDisplayname.Text = me.displayName;
+                txtEmail.Text = me.email;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi khi load thông tin người dùng " + ex.Message);
+            }
+        }
+
+        private async void btnDeleteUser_Click(object sender, EventArgs e)
+        {
+            var f = new ConfirmDeleteAccountUI();
+
+            f.AccountDeleted += () =>
+            {
+                this.Hide();
+                new LoginUI().Show();
+            };
+
+            f.ShowDialog();
+        }
 
 
         //
