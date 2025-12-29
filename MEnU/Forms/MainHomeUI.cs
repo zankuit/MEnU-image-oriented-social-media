@@ -651,6 +651,59 @@ namespace MEnU.Forms
                 MessageBox.Show("Lưu ảnh thành công");
             }
         }
+        private async void btnDeletePost_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    LoadToken(out string accessToken, out string refreshToken);
+                    bool isValid = await VerifyToken(accessToken);
+
+                    client.DefaultRequestHeaders.Authorization =
+                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", $"{accessToken}");
+
+                    if (!isValid)
+                    {
+                        var refreshed = await Refresh();
+                        if (!refreshed)
+                        {
+                            MessageBox.Show("Session expired. Please log in again.");
+                            return;
+                        }
+
+                        LoadToken(out string newAccess, out string _);
+
+                        client.DefaultRequestHeaders.Authorization =
+                            new AuthenticationHeaderValue("Bearer", newAccess);
+                    }
+
+                    var request = new HttpRequestMessage(
+                        HttpMethod.Delete,
+                        $"{baseUrl}api/photos/photos/{currentPhotoId}"
+                    );
+
+                    var response = await client.SendAsync(request);
+                    var responseJson = await response.Content.ReadAsStringAsync();
+
+                    var root = JObject.Parse(responseJson);
+                    bool success = (bool)root["success"];
+                    var message = root["message"].ToString();
+
+                    if (!success)
+                    {
+                        MessageBox.Show(message);
+                        return;
+                    }
+
+                    MessageBox.Show("Đã xóa ảnh!");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+        }
         //
         // CHAT TAB
         //
