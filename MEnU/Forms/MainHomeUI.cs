@@ -525,6 +525,132 @@ namespace MEnU.Forms
                 MessageBox.Show($"Error: {ex.Message}");
             }
         }
+        private async void llbViewReactions_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    LoadToken(out string accessToken, out string refreshToken);
+                    bool isValid = await VerifyToken(accessToken);
+
+                    client.DefaultRequestHeaders.Authorization =
+                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", $"{accessToken}");
+
+                    if (!isValid)
+                    {
+                        var refreshed = await Refresh();
+                        if (!refreshed)
+                        {
+                            MessageBox.Show("Session expired. Please log in again.");
+                            return;
+                        }
+
+                        LoadToken(out string newAccess, out string _);
+
+                        client.DefaultRequestHeaders.Authorization =
+                            new AuthenticationHeaderValue("Bearer", newAccess);
+                    }
+
+                    var response = await client.GetAsync($"{baseUrl}api/photos/reaction/{currentPhotoId}");
+                    var responseJson = await response.Content.ReadAsStringAsync();
+
+                    var root = JObject.Parse(responseJson);
+
+                    bool success = (bool)root["success"];
+                    string message = root["message"].ToString();
+
+                    if (!success)
+                    {
+                        MessageBox.Show("Không thể xem reactions" + message);
+                        return;
+                    }
+
+                    var reactions = root["data"].ToObject<List<Reaction>>();
+
+                    new ReactionListViewUI(reactions).ShowDialog();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
+            }
+        }
+
+        private async void btnDownloadPost_Click(object sender, EventArgs e)
+        {
+            long photoId = currentPhotoId;
+
+            using (SaveFileDialog saveDialog = new SaveFileDialog())
+            {
+                saveDialog.Title = "Chọn nơi lưu ảnh";
+                saveDialog.Filter = "JPEG Image (*.jpg)|*.jpg|PNG Image (*.png)|*.png|All files (*.*)|*.*";
+                saveDialog.FileName = $"photo_{photoId}.jpg";
+
+                if (saveDialog.ShowDialog() != DialogResult.OK)
+                    return;
+
+                btnDownloadPost.Enabled = false;
+
+                try
+                {
+                    await DownloadPhotoAsync(photoId, saveDialog.FileName);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Lỗi tải ảnh: {ex.Message}");
+                }
+                finally
+                {
+                    btnDownloadPost.Enabled = true;
+                }
+            }
+        }
+        private async Task DownloadPhotoAsync(long photoId, string filePath)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                LoadToken(out string accessToken, out string refreshToken);
+                bool isValid = await VerifyToken(accessToken);
+
+                client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", accessToken);
+
+                if (!isValid)
+                {
+                    var refreshed = await Refresh();
+                    if (!refreshed)
+                    {
+                        MessageBox.Show("Session expired. Please log in again.");
+                        return;
+                    }
+
+                    LoadToken(out string newAccess, out _);
+                    client.DefaultRequestHeaders.Authorization =
+                        new AuthenticationHeaderValue("Bearer", newAccess);
+                }
+
+                using (var response = await client.GetAsync(
+                    @$"{baseUrl}api/photos/{photoId}/download",
+                    HttpCompletionOption.ResponseHeadersRead))
+                {
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        MessageBox.Show("Không thể tải ảnh");
+                        return;
+                    }
+
+                    using (var stream = await response.Content.ReadAsStreamAsync())
+                    using (var fileStream = new FileStream(
+                        filePath, FileMode.Create, FileAccess.Write, FileShare.None))
+                    {
+                        await stream.CopyToAsync(fileStream);
+                    }
+                }
+
+                MessageBox.Show("Lưu ảnh thành công");
+            }
+        }
         //
         // CHAT TAB
         //
