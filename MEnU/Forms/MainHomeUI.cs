@@ -1313,6 +1313,43 @@ namespace MEnU.Forms
             f.ShowDialog();
         }
 
+        private void btnSetavt_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog ofd = new OpenFileDialog())
+            {
+                ofd.Title = "Chọn ảnh đại diện";
+                ofd.Filter = "Image Files|*.jpg;*.jpeg;*.png";
+                ofd.Multiselect = false;
+
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    string selectedPath = ofd.FileName;
+
+                    txtNewAvatarPath.Text = selectedPath;
+
+                    picAvatarSetting.Image = Image.FromFile(selectedPath);
+                }
+            }
+        }
+
+        private void btnCancelUpdateInfo_Click(object sender, EventArgs e)
+        {
+            btnChangeInfo.Enabled = true;
+            btnCancelUpdateInfo.Visible = false;
+            btnSaveUpdateInfo.Visible = false;
+            btnSetavt.Visible = false;
+
+            txtNewAvatarPath.Visible = false;
+
+            txtDisplayname.ReadOnly = true;
+            txtEmail.ReadOnly = true;
+
+            txtDisplayname.Text = displayNameSetting;
+            txtEmail.Text = emailSetting;
+
+            if (avatarUrlSetting != null) picAvatarSetting.LoadAsync(avatarUrlSetting);
+        }
+
 
         //
         // LINH TINH
