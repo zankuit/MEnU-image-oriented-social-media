@@ -1313,6 +1313,19 @@ namespace MEnU.Forms
             f.ShowDialog();
         }
 
+        private void btnChangeInfo_Click(object sender, EventArgs e)
+        {
+            btnChangeInfo.Enabled = false;
+            btnCancelUpdateInfo.Visible = true;
+            btnSaveUpdateInfo.Visible = true;
+            btnSetavt.Visible = true;
+
+            txtNewAvatarPath.Visible = true;
+
+            txtDisplayname.ReadOnly = false;
+            txtEmail.ReadOnly = false;
+        }
+
         private void btnSetavt_Click(object sender, EventArgs e)
         {
             using (OpenFileDialog ofd = new OpenFileDialog())
