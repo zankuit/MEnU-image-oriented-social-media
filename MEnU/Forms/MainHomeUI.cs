@@ -1326,6 +1326,108 @@ namespace MEnU.Forms
             txtEmail.ReadOnly = false;
         }
 
+        private async void btnSaveUpdateInfo_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    LoadToken(out string accessToken, out string refreshToken);
+                    bool isValid = await VerifyToken(accessToken);
+
+                    client.DefaultRequestHeaders.Authorization =
+                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+
+                    if (!isValid)
+                    {
+                        var refreshed = await Refresh();
+                        if (!refreshed)
+                        {
+                            MessageBox.Show("Session expired. Please log in again.");
+                            return;
+                        }
+
+                        LoadToken(out string newAccess, out string _);
+
+                        client.DefaultRequestHeaders.Authorization =
+                            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", newAccess);
+                    }
+
+                    // ====== Build multipart/form-data ======
+                    using (var form = new MultipartFormDataContent())
+                    {
+                        // profile JSON string
+                        var profileObj = new
+                        {
+                            username = txtUsername.Text.Trim(),
+                            displayName = txtDisplayname.Text.Trim(),
+                            email = txtEmail.Text.Trim()
+                        };
+
+                        string profileJson = Newtonsoft.Json.JsonConvert.SerializeObject(profileObj);
+
+                        form.Add(
+                            new StringContent(profileJson, Encoding.UTF8),
+                            "profile"
+                        );
+
+                        // avatar (optional)
+                        if (!string.IsNullOrEmpty(txtNewAvatarPath.Text) && File.Exists(txtNewAvatarPath.Text))
+                        {
+                            byte[] imageBytes = File.ReadAllBytes(txtNewAvatarPath.Text);
+                            var fileContent = new ByteArrayContent(imageBytes);
+
+                            fileContent.Headers.ContentType =
+                                new System.Net.Http.Headers.MediaTypeHeaderValue("image/jpeg");
+
+                            form.Add(
+                                fileContent,
+                                "avatar",
+                                Path.GetFileName(txtNewAvatarPath.Text)
+                            );
+                        }
+
+                        // ====== Call API ======
+                        var response = await client.PutAsync(
+                            @$"{baseUrl}api/user/update-profile",
+                            form
+                        );
+
+                        var responseJson = await response.Content.ReadAsStringAsync();
+                        var root = JObject.Parse(responseJson);
+
+                        bool success = (bool)root["success"];
+                        string message = root["message"]?.ToString();
+
+                        if (!success)
+                        {
+                            MessageBox.Show(message);
+                            return;
+                        }
+
+                        btnChangeInfo.Enabled = true;
+                        btnCancelUpdateInfo.Visible = false;
+                        btnSaveUpdateInfo.Visible = false;
+                        btnSetavt.Visible = false;
+
+                        txtNewAvatarPath.Visible = false;
+
+                        txtDisplayname.ReadOnly = true;
+                        txtEmail.ReadOnly = true;
+
+                        MessageBox.Show("Cập nhật thông tin thành công.");
+
+                        await DisplayUserInfo();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
+            }
+
+        }
+
         private void btnSetavt_Click(object sender, EventArgs e)
         {
             using (OpenFileDialog ofd = new OpenFileDialog())
@@ -1361,6 +1463,16 @@ namespace MEnU.Forms
             txtEmail.Text = emailSetting;
 
             if (avatarUrlSetting != null) picAvatarSetting.LoadAsync(avatarUrlSetting);
+        }
+
+        private void btnChangePassword_Click(object sender, EventArgs e)
+        {
+            new ChangePasswordUI().ShowDialog();
+        }
+
+        private void btnSendFeedback_Click(object sender, EventArgs e)
+        {
+            new SendFeedbackUI().ShowDialog();
         }
 
 
