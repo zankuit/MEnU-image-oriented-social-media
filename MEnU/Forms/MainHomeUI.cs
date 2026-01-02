@@ -716,6 +716,7 @@ namespace MEnU.Forms
 
         string myAvatarUrl;
         string myUsername;
+        bool isSelfChat;
 
         string friendAvatarUrl;
         string friendDisplayName;
@@ -724,6 +725,8 @@ namespace MEnU.Forms
 
         private async void OpenChat(long userId)
         {
+            Cursor.Current = Cursors.WaitCursor;
+
             flowLayoutPanel1.Visible = true;
 
             currentChatUserId = userId;
@@ -746,6 +749,9 @@ namespace MEnU.Forms
                 // 4. Load profile friend
                 await LoadFriendProfile(userId);
 
+                if (currentFriendUsername == me.username)
+                    isSelfChat = true;
+
                 // 5. Load page 0 (20 tin gần nhất)
                 await LoadMessagesPage(
                     userId,
@@ -755,6 +761,8 @@ namespace MEnU.Forms
 
                 btnSendContent.Visible = true;
                 txtContent.Visible = true;
+
+                Cursor.Current = Cursors.Default;
             }
             catch (Exception ex)
             {
@@ -879,6 +887,358 @@ namespace MEnU.Forms
                 isLoadingOldMessages = false;
             }
 
+        }
+
+        private async Task<MessageBubbleControl> CreateMessageBubble(Messsage msg)
+        {
+            var item = new MessageBubbleControl();
+
+            if (msg.fromUsername == myUsername)
+                await item.SetMessage(msg, myAvatarUrl);
+            else
+                await item.SetMessage(msg, friendAvatarUrl);
+
+            return item;
+        }
+
+        private async Task AddMessageToUI(Messsage msg, bool scrollToBottom = false)
+        {
+            var bubble = new MessageBubbleControl();
+
+            if (msg.fromUsername == myUsername)
+                await bubble.SetMessage(msg, myAvatarUrl);
+            else
+                await bubble.SetMessage(msg, friendAvatarUrl);
+
+            flowLayoutPanel1.Controls.Add(bubble);
+
+            if (scrollToBottom)
+                flowLayoutPanel1.ScrollControlIntoView(bubble);
+        }
+
+        private async void FlowLayoutPanel1_Scroll(object sender, ScrollEventArgs e)
+        {
+            if (currentChatUserId == -1) return;
+            if (isLoadingOldMessages) return;
+            if (!hasMoreMessages) return;
+
+            if (flowLayoutPanel1.VerticalScroll.Value != 0) return;
+
+            currentPage++;
+
+            await LoadMessagesPage(
+                currentChatUserId,
+                currentPage,
+                isFirstLoad: false
+            );
+        }
+
+        private async Task GetAndDisplayConversation()
+        {
+            flpListFriendChat.Controls.Clear();
+
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    LoadToken(out string accessToken, out string refreshToken);
+                    bool isValid = await VerifyToken(accessToken);
+
+                    client.DefaultRequestHeaders.Authorization =
+                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", $"{accessToken}");
+
+                    if (!isValid)
+                    {
+                        var refreshed = await Refresh();
+
+                        if (!refreshed)
+                        {
+                            MessageBox.Show("Session expired. Please log in again.");
+                            return;
+                        }
+
+                        LoadToken(out string newAccess, out string _);
+
+                        client.DefaultRequestHeaders.Authorization =
+                            new AuthenticationHeaderValue("Bearer", newAccess);
+                    }
+
+                    var response = await client.GetAsync($@"{baseUrl}api/message/chats");
+                    var responseJson = await response.Content.ReadAsStringAsync();
+
+                    var root = JObject.Parse(responseJson);
+                    bool success = (bool)root["success"];
+                    string message = root["message"].ToString();
+
+
+                    if (!success)
+                    {
+                        MessageBox.Show($"Lỗi: {message}");
+                        return;
+                    }
+
+                    if (!responseJson.Contains("data"))
+                    {
+                        flpListFriendChat.Controls.Add(llbStartChat);
+                        return;
+                    }
+
+                    var conversations = root["data"].ToObject<List<ConversationPreview>>();
+
+                    for (int i = 0; i < conversations.Count; i++)
+                    {
+                        ConversationPreview conversation = conversations[i];
+
+                        ChatListControl item = new ChatListControl();
+                        item.BindData(conversation);
+
+                        flpListFriendChat.Controls.Add(item);
+
+                        item.ChatClicked += f =>
+                        {
+                            // dùng OpenChat;
+                            OpenChat(f.id);
+                        };
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
+            }
+        }
+
+        private async void llbStartChat_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            var friends = await GetFriends();
+
+            var f = new SelectFriendToChatUI(friends);
+
+            f.FriendSelected += (user) =>
+            {
+                // Open chat with selected friend
+                OpenChat(user.id);
+            };
+
+            f.ShowDialog();
+        }
+
+        private async Task LoadFriendProfile(long friendId)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                LoadToken(out string accessToken, out _);
+                bool isValid = await VerifyToken(accessToken);
+
+                client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", accessToken);
+
+                if (!isValid)
+                {
+                    var refreshed = await Refresh();
+                    if (!refreshed)
+                        throw new Exception("Session expired");
+
+                    LoadToken(out string newAccess, out _);
+                    client.DefaultRequestHeaders.Authorization =
+                        new AuthenticationHeaderValue("Bearer", newAccess);
+                }
+
+                var response = await client.GetAsync(
+                    $"{baseUrl}api/friends/profile/{friendId}"
+                );
+
+                var json = await response.Content.ReadAsStringAsync();
+                var root = JObject.Parse(json);
+
+                if (!(bool)root["success"])
+                    throw new Exception((string)root["message"]);
+
+                var data = root["data"];
+                friendAvatarUrl = (string?)data["avatarURL"];
+                friendDisplayName = (string)data["displayName"];
+                currentFriendUsername = (string)data["username"];
+                currentFriendId = (long)data["id"];
+                // Update UI
+                picAvatarTitleChat.Image = Properties.Resources.AvatarIcon;
+                picAvatarTitleChat.Visible = true;
+                lblDisplayNameTitleChat.Visible = true;
+                lblDisplayNameTitleChat.Text = friendDisplayName;
+
+                if (!string.IsNullOrEmpty(friendAvatarUrl))
+                    picAvatarTitleChat.LoadAsync(friendAvatarUrl);
+            }
+        }
+
+        private async void HandleRealtimeChat(RealtimeMessageDto rtMsg)
+        {
+            if (isSelfChat) return;
+
+            if (rtMsg.FromUsername != currentFriendUsername &&
+                rtMsg.ToUsername != currentFriendUsername)
+                return;
+
+            var msg = rtMsg.ToMessage();
+
+            var bubble = new MessageBubbleControl();
+
+            if (msg.fromUsername == myUsername)
+                await bubble.SetMessage(msg, myAvatarUrl);
+            else
+                await bubble.SetMessage(msg, friendAvatarUrl);
+
+            flowLayoutPanel1.Controls.Add(bubble);
+            flowLayoutPanel1.ScrollControlIntoView(bubble);
+        }
+
+        private async void btnSendContent_Click(object sender, EventArgs e)
+        {
+            var content = txtContent.Text.Trim();
+            if (string.IsNullOrEmpty(content)) return;
+
+            var msg = new RealtimeMessageDto
+            {
+                Content = content,
+                FromUsername = myUsername,
+                ToUsername = currentFriendUsername,
+                CreatedAt = DateTime.Now
+            };
+
+            await AddMessageToUI(msg.ToMessage(), scrollToBottom: true);
+
+            txtContent.Clear();
+
+            // 3. Gửi lên server (API hoặc WS)
+            try
+            {
+                await SendMessageAsync(currentFriendId, content);
+                await Seen(currentFriendId);
+                await HandleChatUI(msg, false);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Gửi tin nhắn thất bại: " + ex.Message);
+            }
+        }
+
+        private async Task SendMessageAsync(long friendId, string content)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                LoadToken(out string accessToken, out _);
+                bool isValid = await VerifyToken(accessToken);
+
+                client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", accessToken);
+
+                if (!isValid)
+                {
+                    var refreshed = await Refresh();
+
+                    if (!refreshed)
+                    {
+                        MessageBox.Show("Session expired. Please log in again.");
+                        return;
+                    }
+
+                    LoadToken(out string newAccess, out string _);
+
+                    client.DefaultRequestHeaders.Authorization =
+                        new AuthenticationHeaderValue("Bearer", newAccess);
+                }
+
+                var body = new
+                {
+                    friendId = friendId,
+                    message = content
+                };
+
+                var response = await client.PostAsJsonAsync(
+                    $"{baseUrl}api/message/chat/{friendId}",
+                    body
+                );
+
+                if (!response.IsSuccessStatusCode)
+                    throw new Exception("Server error");
+            }
+        }
+
+        private async Task HandleChatUI(RealtimeMessageDto rtMsg, bool fromOther)
+        {
+            bool existFriendInList = false;
+
+            if (!isInChatTab) return;
+
+            if (!fromOther) // mình gửi
+            {
+                foreach (ChatListControl c in flpListFriendChat.Controls)
+                {
+                    if (c.username == rtMsg.ToUsername)
+                    {
+                        c.SetSeen(false);
+                        c.UpdateLastedMessageRealtime(rtMsg.Content);
+                        flpListFriendChat.Controls.SetChildIndex(c, 0);
+                        existFriendInList = true;
+                        break;
+                    }
+                }
+            }
+            else // người khác gửi
+            {
+                foreach (ChatListControl c in flpListFriendChat.Controls)
+                {
+                    if (c.username == rtMsg.FromUsername)
+                    {
+                        if (rtMsg.FromUsername != currentFriendUsername) c.SetSeen(true);
+
+                        c.UpdateLastedMessageRealtime(rtMsg.Content);
+                        flpListFriendChat.Controls.SetChildIndex(c, 0);
+                        existFriendInList = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!existFriendInList)
+            {
+                await GetAndDisplayConversation();
+            }
+        }
+
+        private async Task Seen(long friendId)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                LoadToken(out string accessToken, out string refreshToken);
+                bool isValid = await VerifyToken(accessToken);
+
+                client.DefaultRequestHeaders.Authorization =
+                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", $"{accessToken}");
+
+                if (!isValid)
+                {
+                    var refreshed = await Refresh();
+                    if (!refreshed)
+                    {
+                        MessageBox.Show("Session expired. Please log in again.");
+                        return;
+                    }
+
+                    LoadToken(out string newAccess, out string _);
+
+                    client.DefaultRequestHeaders.Authorization =
+                        new AuthenticationHeaderValue("Bearer", newAccess);
+                }
+
+                var request = new HttpRequestMessage(
+                    HttpMethod.Put,
+                    $"{baseUrl}api/message/{friendId}/seen"
+                );
+
+                request.Content = null;
+
+                var response = await client.SendAsync(request);
+            }
         }
 
 
