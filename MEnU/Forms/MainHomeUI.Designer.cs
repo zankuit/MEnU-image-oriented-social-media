@@ -32,6 +32,7 @@
             pictureBox1 = new PictureBox();
             tabMenu = new TabControl();
             tpHome = new TabPage();
+            btnSendReactChat = new Button();
             btnRefreshHome = new Button();
             flowLayoutPanel2 = new FlowLayoutPanel();
             lblDisplayNamePost = new Label();
@@ -43,7 +44,6 @@
             picAvatarPost = new PictureBox();
             btnDeletePost = new Button();
             btnDownloadPost = new Button();
-            btnSendReactChat = new Button();
             txtReactChat = new TextBox();
             btnLoadimage = new Button();
             btnDown = new Button();
@@ -75,6 +75,7 @@
             txtFindUser = new TextBox();
             btnFind = new Button();
             tpNotification = new TabPage();
+            btnDeleleAllNoti = new Button();
             flpNotificationView = new FlowLayoutPanel();
             btnReloadNotification = new Button();
             label3 = new Label();
@@ -181,6 +182,7 @@
             // tpHome
             // 
             tpHome.BackColor = Color.FromArgb(16, 48, 99);
+            tpHome.Controls.Add(btnSendReactChat);
             tpHome.Controls.Add(btnRefreshHome);
             tpHome.Controls.Add(flowLayoutPanel2);
             tpHome.Controls.Add(lblNoPhotoYet);
@@ -190,7 +192,6 @@
             tpHome.Controls.Add(picAvatarPost);
             tpHome.Controls.Add(btnDeletePost);
             tpHome.Controls.Add(btnDownloadPost);
-            tpHome.Controls.Add(btnSendReactChat);
             tpHome.Controls.Add(txtReactChat);
             tpHome.Controls.Add(btnLoadimage);
             tpHome.Controls.Add(btnDown);
@@ -204,6 +205,24 @@
             tpHome.Size = new Size(625, 637);
             tpHome.TabIndex = 0;
             tpHome.Text = "Home";
+            // 
+            // btnSendReactChat
+            // 
+            btnSendReactChat.BackColor = Color.White;
+            btnSendReactChat.BackgroundImage = Properties.Resources.UpIcon;
+            btnSendReactChat.BackgroundImageLayout = ImageLayout.Zoom;
+            btnSendReactChat.FlatAppearance.BorderSize = 0;
+            btnSendReactChat.FlatAppearance.MouseDownBackColor = Color.FromArgb(0, 94, 128);
+            btnSendReactChat.FlatAppearance.MouseOverBackColor = Color.FromArgb(34, 140, 178);
+            btnSendReactChat.FlatStyle = FlatStyle.Flat;
+            btnSendReactChat.Font = new Font("Consolas", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnSendReactChat.ForeColor = Color.White;
+            btnSendReactChat.Location = new Point(340, 567);
+            btnSendReactChat.Name = "btnSendReactChat";
+            btnSendReactChat.Size = new Size(32, 41);
+            btnSendReactChat.TabIndex = 38;
+            btnSendReactChat.UseVisualStyleBackColor = false;
+            btnSendReactChat.Click += btnSendReactChat_Click;
             // 
             // btnRefreshHome
             // 
@@ -328,7 +347,7 @@
             picAvatarPost.Location = new Point(68, 479);
             picAvatarPost.Name = "picAvatarPost";
             picAvatarPost.Size = new Size(32, 32);
-            picAvatarPost.SizeMode = PictureBoxSizeMode.Zoom;
+            picAvatarPost.SizeMode = PictureBoxSizeMode.StretchImage;
             picAvatarPost.TabIndex = 40;
             picAvatarPost.TabStop = false;
             // 
@@ -369,24 +388,6 @@
             btnDownloadPost.Text = "Tải ảnh về";
             btnDownloadPost.UseVisualStyleBackColor = false;
             btnDownloadPost.Click += btnDownloadPost_Click;
-            // 
-            // btnSendReactChat
-            // 
-            btnSendReactChat.BackColor = Color.White;
-            btnSendReactChat.BackgroundImage = Properties.Resources.UpIcon;
-            btnSendReactChat.BackgroundImageLayout = ImageLayout.Zoom;
-            btnSendReactChat.FlatAppearance.BorderSize = 0;
-            btnSendReactChat.FlatAppearance.MouseDownBackColor = Color.FromArgb(0, 94, 128);
-            btnSendReactChat.FlatAppearance.MouseOverBackColor = Color.FromArgb(34, 140, 178);
-            btnSendReactChat.FlatStyle = FlatStyle.Flat;
-            btnSendReactChat.Font = new Font("Consolas", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnSendReactChat.ForeColor = Color.White;
-            btnSendReactChat.Location = new Point(340, 567);
-            btnSendReactChat.Name = "btnSendReactChat";
-            btnSendReactChat.Size = new Size(32, 41);
-            btnSendReactChat.TabIndex = 38;
-            btnSendReactChat.UseVisualStyleBackColor = false;
-            btnSendReactChat.Click += btnSendReactChat_Click;
             // 
             // txtReactChat
             // 
@@ -805,16 +806,36 @@
             // tpNotification
             // 
             tpNotification.BackColor = Color.FromArgb(16, 48, 99);
+            tpNotification.Controls.Add(btnDeleleAllNoti);
             tpNotification.Controls.Add(flpNotificationView);
             tpNotification.Controls.Add(btnReloadNotification);
             tpNotification.Controls.Add(label3);
             tpNotification.Controls.Add(pictureBox4);
             tpNotification.Font = new Font("Consolas", 10.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            tpNotification.Location = new Point(4, 24);
+            tpNotification.Location = new Point(4, 26);
             tpNotification.Name = "tpNotification";
-            tpNotification.Size = new Size(625, 639);
+            tpNotification.Size = new Size(625, 637);
             tpNotification.TabIndex = 3;
             tpNotification.Text = "Thông báo";
+            // 
+            // btnDeleleAllNoti
+            // 
+            btnDeleleAllNoti.AutoSize = true;
+            btnDeleleAllNoti.BackColor = Color.Transparent;
+            btnDeleleAllNoti.BackgroundImageLayout = ImageLayout.Zoom;
+            btnDeleleAllNoti.FlatAppearance.BorderSize = 0;
+            btnDeleleAllNoti.FlatAppearance.MouseDownBackColor = Color.FromArgb(0, 94, 128);
+            btnDeleleAllNoti.FlatAppearance.MouseOverBackColor = Color.FromArgb(34, 140, 178);
+            btnDeleleAllNoti.FlatStyle = FlatStyle.Flat;
+            btnDeleleAllNoti.Font = new Font("Consolas", 10.8F, FontStyle.Bold | FontStyle.Underline, GraphicsUnit.Point, 0);
+            btnDeleleAllNoti.ForeColor = Color.White;
+            btnDeleleAllNoti.Location = new Point(422, 63);
+            btnDeleleAllNoti.Name = "btnDeleleAllNoti";
+            btnDeleleAllNoti.Size = new Size(178, 28);
+            btnDeleleAllNoti.TabIndex = 20;
+            btnDeleleAllNoti.Text = "Xóa tất cả thông báo";
+            btnDeleleAllNoti.UseVisualStyleBackColor = false;
+            btnDeleleAllNoti.Click += btnDeleleAllNoti_Click;
             // 
             // flpNotificationView
             // 
@@ -1215,8 +1236,8 @@
             pictureBox2.Image = Properties.Resources.AvatarIcon;
             pictureBox2.Location = new Point(12, 92);
             pictureBox2.Name = "pictureBox2";
-            pictureBox2.Size = new Size(125, 120);
-            pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox2.Size = new Size(125, 125);
+            pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
             pictureBox2.TabIndex = 18;
             pictureBox2.TabStop = false;
             // 
@@ -1285,6 +1306,7 @@
             Name = "MainHomeUI";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "MEnU";
+            FormClosing += MainHomeUI_Closing;
             Load += MainHomeUI_Load;
             Shown += MainHomeUI_Shown;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
@@ -1414,5 +1436,6 @@
         private Button btnSendFeedback;
         private Button btnChangePassword;
         private TextBox txtNewAvatarPath;
+        private Button btnDeleleAllNoti;
     }
 }

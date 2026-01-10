@@ -169,7 +169,7 @@ namespace MEnU.UserControls
         }
 
         public event Action<User> ChatClicked;
-        private void btnChat_Click(object sender, EventArgs e)
+        private async void btnChat_Click(object sender, EventArgs e)
         {
             MEnU.Models.User friend = new MEnU.Models.User();
             friend.id = id;
@@ -178,7 +178,45 @@ namespace MEnU.UserControls
             friend.email = email;
             friend.avatarURL = avatarURL;
 
+            await Seen(friend.id);
+
             ChatClicked?.Invoke(friend);
+        }
+
+        private async Task Seen(long friendId)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                LoadToken(out string accessToken, out string refreshToken);
+                bool isValid = await VerifyToken(accessToken);
+
+                client.DefaultRequestHeaders.Authorization =
+                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", $"{accessToken}");
+
+                if (!isValid)
+                {
+                    var refreshed = await Refresh();
+                    if (!refreshed)
+                    {
+                        MessageBox.Show("Session expired. Please log in again.");
+                        return;
+                    }
+
+                    LoadToken(out string newAccess, out string _);
+
+                    client.DefaultRequestHeaders.Authorization =
+                        new AuthenticationHeaderValue("Bearer", newAccess);
+                }
+
+                var request = new HttpRequestMessage(
+                    HttpMethod.Put,
+                    $"{baseUrl}api/message/{friendId}/seen"
+                );
+
+                request.Content = null;
+
+                var response = await client.SendAsync(request);
+            }
         }
     }
 }

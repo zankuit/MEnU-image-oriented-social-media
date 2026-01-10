@@ -105,7 +105,7 @@
             picUserRequest.Location = new Point(0, 6);
             picUserRequest.Name = "picUserRequest";
             picUserRequest.Size = new Size(43, 43);
-            picUserRequest.SizeMode = PictureBoxSizeMode.Zoom;
+            picUserRequest.SizeMode = PictureBoxSizeMode.StretchImage;
             picUserRequest.TabIndex = 23;
             picUserRequest.TabStop = false;
             // 

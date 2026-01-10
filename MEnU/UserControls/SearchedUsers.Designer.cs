@@ -68,7 +68,7 @@
             picSearchedUser.Location = new Point(7, 2);
             picSearchedUser.Name = "picSearchedUser";
             picSearchedUser.Size = new Size(43, 43);
-            picSearchedUser.SizeMode = PictureBoxSizeMode.Zoom;
+            picSearchedUser.SizeMode = PictureBoxSizeMode.StretchImage;
             picSearchedUser.TabIndex = 18;
             picSearchedUser.TabStop = false;
             // 

@@ -4,7 +4,7 @@ namespace MEnU.Models
 {
     public class Messsage
     {
-        public long id { get; set; }
+        public long? id { get; set; }
         public string type { get; set; }
         public string content { get; set; }
         public string fromUsername { get; set; }

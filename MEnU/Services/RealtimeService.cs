@@ -158,6 +158,11 @@ namespace MEnU.Services
                     var reactNoti = obj.ToObject<Notification>();
                     OnReactionReceived?.Invoke(reactNoti);
                     break;
+
+                case "comment":
+                    var imageMsg = obj.ToObject<RealtimeMessageDto>();
+                    OnChatReceived?.Invoke(imageMsg);
+                    break;
             }
         }
 

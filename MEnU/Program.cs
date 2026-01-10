@@ -2,6 +2,7 @@
 using MEnU.Models;
 using Newtonsoft.Json.Linq;
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Web;
 
 namespace MEnU
@@ -83,6 +84,47 @@ namespace MEnU
 
             accessToken = parts[0];
             refreshToken = parts[1];
+
+            return true;
+        }
+
+        static void SaveToken(string accessToken, string refreshToken)
+        {
+            string appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            string folderPath = Path.Combine(appData, "MEnU");
+
+            if (!Directory.Exists(folderPath))
+                Directory.CreateDirectory(folderPath);
+
+            string filePath = Path.Combine(folderPath, "token.txt");
+
+            string token = $"{accessToken};{refreshToken}";
+
+            File.WriteAllText(filePath, token);
+        }
+
+        static async Task<bool> Refresh()
+        {
+            var load = LoadToken(out string AccessToken, out string RefreshToken);
+
+            using var client = new HttpClient();
+            var body = new
+            {
+                refreshToken = RefreshToken
+            };
+
+            var response = await client.PostAsJsonAsync($"https://unvulgarly-unfueled-mozella.ngrok-free.dev/api/auth/refresh", body);
+
+            bool success = (bool)JObject.Parse(await response.Content.ReadAsStringAsync())["success"];
+
+            if (!success) return false;
+
+            var json = JObject.Parse(await response.Content.ReadAsStringAsync());
+            var data = json["data"];
+            //AccessToken = json["accessToken"]!.ToString();
+            //RefreshToken = json["refreshToken"]!.ToString();
+
+            SaveToken(data["accessToken"]!.ToString(), data["refreshToken"]!.ToString());
 
             return true;
         }

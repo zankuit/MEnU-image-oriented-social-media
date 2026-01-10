@@ -61,7 +61,7 @@
             picAvatar.Location = new Point(12, 62);
             picAvatar.Name = "picAvatar";
             picAvatar.Size = new Size(101, 102);
-            picAvatar.SizeMode = PictureBoxSizeMode.Zoom;
+            picAvatar.SizeMode = PictureBoxSizeMode.StretchImage;
             picAvatar.TabIndex = 19;
             picAvatar.TabStop = false;
             // 

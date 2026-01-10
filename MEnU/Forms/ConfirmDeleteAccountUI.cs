@@ -25,6 +25,8 @@ namespace MEnU.Forms
             InitializeComponent();
         }
 
+        public event Action AccountDeleted;
+
         private async void btnConfirmDeleteAccount_Click(object sender, EventArgs e)
         {
             if (txtUsername.Text != me.username)
@@ -79,9 +81,9 @@ namespace MEnU.Forms
                         }
 
                         MessageBox.Show("Xóa tài khoản thành công");
-                        this.Hide();
-                        new LoginUI().Show();
-
+                        ClearToken();
+                        AccountDeleted.Invoke();
+                        this.Close();
                     }
                 }
                 catch (Exception ex)
@@ -183,6 +185,19 @@ namespace MEnU.Forms
             string token = $"{accessToken};{refreshToken}";
 
             File.WriteAllText(filePath, token);
+        }
+
+        private void ClearToken()
+        {
+            string appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            string folderPath = Path.Combine(appData, "MEnU");
+            string filePath = Path.Combine(folderPath, "token.txt");
+
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+
         }
 
         private async Task<bool> VerifyToken(string accessToken)

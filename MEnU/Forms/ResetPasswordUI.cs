@@ -67,7 +67,8 @@ namespace MEnU.Forms
                     }
 
                     MessageBox.Show($"Reset mật khẩu thành công", "Thông báo");
-                    this.Close();
+                    this.Hide();
+                    new LoginUI().Show();
                 }
             }
             catch (Exception ex)
