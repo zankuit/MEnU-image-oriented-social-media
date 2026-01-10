@@ -89,34 +89,49 @@ namespace MEnU.Forms
 
         private void button1_Click(object sender, EventArgs e)
         {
-            using (OpenFileDialog ofd = new OpenFileDialog())
+            try
             {
-                ofd.Title = "Chọn ảnh";
-                ofd.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif";
-                ofd.Multiselect = false;
-
-                if (ofd.ShowDialog() == DialogResult.OK)
+                using (OpenFileDialog ofd = new OpenFileDialog())
                 {
-                    selectedImagePath = ofd.FileName;
+                    ofd.Title = "Chọn ảnh";
+                    ofd.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif";
+                    ofd.Multiselect = false;
 
-                    // Load ảnh lên PictureBox
-                    picPhoto.Image = Image.FromFile(selectedImagePath);
+                    if (ofd.ShowDialog() == DialogResult.OK)
+                    {
+                        selectedImagePath = ofd.FileName;
+
+                        // Load ảnh lên PictureBox
+                        picPhoto.Image = Image.FromFile(selectedImagePath);
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: " + ex.Message + "\n\rVui lòng chọn đúng định dạng ảnh");
+            }
+            
         }
 
         private async void btnSendReactChat_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(selectedImagePath))
-            {
-                MessageBox.Show("Chưa chọn ảnh");
-                return;
-            }
-
-            string caption = txtReactChat.Text;
-
             try
             {
+                Cursor.Current = Cursors.WaitCursor;
+
+                if (string.IsNullOrEmpty(selectedImagePath))
+                {
+                    MessageBox.Show("Chưa chọn ảnh");
+                    return;
+                }
+
+                string caption = txtReactChat.Text.Trim();
+
+                if (caption == null || caption == "")
+                {
+                    MessageBox.Show("Caption không được trống");
+                    return;
+                }
                 using (HttpClient client = new HttpClient())
                 {
                     LoadToken(out string accessToken, out string refreshToken);
@@ -164,6 +179,8 @@ namespace MEnU.Forms
                             MessageBox.Show($"Không thể đăng ảnh: " + message);
                             return;
                         }
+
+                        Cursor.Current = Cursors.Default;
 
                         MessageBox.Show($"Đăng ảnh thành công!");
                         this.Hide();

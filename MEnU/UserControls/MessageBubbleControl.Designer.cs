@@ -29,15 +29,15 @@
         private void InitializeComponent()
         {
             tblMessagePart = new TableLayoutPanel();
+            lblMessage = new Label();
+            picRefPic = new PictureBox();
             flpHeader = new FlowLayoutPanel();
             picAvatar = new PictureBox();
             lblDisplayName = new Label();
-            picRefPic = new PictureBox();
-            lblMessage = new Label();
             tblMessagePart.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)picRefPic).BeginInit();
             flpHeader.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)picAvatar).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)picRefPic).BeginInit();
             SuspendLayout();
             // 
             // tblMessagePart
@@ -57,6 +57,28 @@
             tblMessagePart.RowStyles.Add(new RowStyle());
             tblMessagePart.Size = new Size(200, 249);
             tblMessagePart.TabIndex = 22;
+            // 
+            // lblMessage
+            // 
+            lblMessage.AutoSize = true;
+            lblMessage.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lblMessage.ForeColor = SystemColors.Control;
+            lblMessage.Location = new Point(3, 234);
+            lblMessage.MaximumSize = new Size(360, 0);
+            lblMessage.Name = "lblMessage";
+            lblMessage.Size = new Size(13, 15);
+            lblMessage.TabIndex = 40;
+            lblMessage.Text = "a";
+            // 
+            // picRefPic
+            // 
+            picRefPic.Location = new Point(3, 37);
+            picRefPic.MaximumSize = new Size(194, 194);
+            picRefPic.Name = "picRefPic";
+            picRefPic.Size = new Size(194, 194);
+            picRefPic.SizeMode = PictureBoxSizeMode.StretchImage;
+            picRefPic.TabIndex = 39;
+            picRefPic.TabStop = false;
             // 
             // flpHeader
             // 
@@ -79,7 +101,7 @@
             picAvatar.Name = "picAvatar";
             picAvatar.Padding = new Padding(0, 0, 6, 0);
             picAvatar.Size = new Size(32, 32);
-            picAvatar.SizeMode = PictureBoxSizeMode.Zoom;
+            picAvatar.SizeMode = PictureBoxSizeMode.StretchImage;
             picAvatar.TabIndex = 36;
             picAvatar.TabStop = false;
             // 
@@ -95,28 +117,6 @@
             lblDisplayName.Text = "Zanku06";
             lblDisplayName.TextAlign = ContentAlignment.MiddleLeft;
             // 
-            // picRefPic
-            // 
-            picRefPic.Location = new Point(3, 37);
-            picRefPic.MaximumSize = new Size(194, 194);
-            picRefPic.Name = "picRefPic";
-            picRefPic.Size = new Size(194, 194);
-            picRefPic.SizeMode = PictureBoxSizeMode.StretchImage;
-            picRefPic.TabIndex = 39;
-            picRefPic.TabStop = false;
-            // 
-            // lblMessage
-            // 
-            lblMessage.AutoSize = true;
-            lblMessage.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            lblMessage.ForeColor = SystemColors.Control;
-            lblMessage.Location = new Point(3, 234);
-            lblMessage.MaximumSize = new Size(360, 0);
-            lblMessage.Name = "lblMessage";
-            lblMessage.Size = new Size(13, 15);
-            lblMessage.TabIndex = 40;
-            lblMessage.Text = "a";
-            // 
             // MessageBubbleControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -129,9 +129,9 @@
             Size = new Size(206, 255);
             tblMessagePart.ResumeLayout(false);
             tblMessagePart.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)picRefPic).EndInit();
             flpHeader.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)picAvatar).EndInit();
-            ((System.ComponentModel.ISupportInitialize)picRefPic).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }

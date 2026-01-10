@@ -255,8 +255,11 @@ namespace MEnU.Forms
 
                     if (!response.IsSuccessStatusCode)
                     {
-                        MessageBox.Show("Lỗi khi đồng ý kết bạn");
+                        MessageBox.Show("Lỗi khi từ chối kết bạn");
+                        return;
                     }
+
+                    CheckAndLoadStatus(1);
                 }
             }
             catch (Exception ex)
@@ -294,7 +297,7 @@ namespace MEnU.Forms
 
                     var request = new HttpRequestMessage(
                         HttpMethod.Post,
-                        $"{baseUrl}api/friends/accpet/{_id}"
+                        $"{baseUrl}api/friends/accept/{_id}"
                     );
 
                     request.Content = null;
@@ -303,8 +306,11 @@ namespace MEnU.Forms
 
                     if (!response.IsSuccessStatusCode)
                     {
-                        MessageBox.Show("Lỗi khi từ chối kết bạn");
+                        MessageBox.Show("Lỗi khi chấp nhận kết bạn");
+                        return;
                     }
+
+                    CheckAndLoadStatus(2);
                 }
             }
             catch (Exception ex)
@@ -312,6 +318,7 @@ namespace MEnU.Forms
                 MessageBox.Show("Error: " + ex.Message);
             }
         }
+
 
         private async void btnDeleteFriend_Click(object sender, EventArgs e)
         {
@@ -351,6 +358,8 @@ namespace MEnU.Forms
                     {
                         MessageBox.Show("Lỗi khi hủy kết bạn");
                     }
+
+                    CheckAndLoadStatus(1);
                 }
             }
             catch (Exception ex)

@@ -57,7 +57,7 @@ namespace MEnU.Forms
                     }
 
                     MessageBox.Show($"Kiểm tra inbox email của bạn", "Thông báo");
-
+                    Application.Exit();
                 }
             }
             catch (Exception ex)

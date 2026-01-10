@@ -2,6 +2,7 @@
 using MEnU.Services;
 using MEnU.UserControl;
 using MEnU.UserControls;
+using Microsoft.VisualBasic;
 using Newtonsoft.Json.Linq;
 using System.ComponentModel.Design.Serialization;
 using System.Net.Http.Headers;
@@ -28,7 +29,13 @@ namespace MEnU.Forms
             //tabMenu.SizeMode = TabSizeMode.Fixed;
             rtxLog.Hide();
 
-            //flowLayoutPanel1.Scroll += FlowLayoutPanel1_Scroll;
+            DisableHomeComponent();
+            btnDownloadPost.Visible = false;
+            btnDeletePost.Visible = false;
+            btnUp.Visible = false;
+            btnDown.Visible = false;
+
+            flowLayoutPanel1.Scroll += FlowLayoutPanel1_Scroll;
         }
 
         //
@@ -127,11 +134,11 @@ namespace MEnU.Forms
 
         long currentPhotoPage = -1;
         long currentPhotoId = -1;
+        long currentOnwerId = -1;
 
         private async void btnDown_Click(object sender, EventArgs e)
         {
             //DisableHomeComponent();
-            picAvatarPost.Image = Properties.Resources.AvatarIcon;
 
             try
             {
@@ -175,7 +182,6 @@ namespace MEnU.Forms
                     if (message[0] == 'N')
                     {
                         //EnableHomeComponent();
-
                         return;
                     }
 
@@ -184,6 +190,7 @@ namespace MEnU.Forms
                     currentPhotoId = photo.photoId;
                     currentPhotoPage++;
 
+                    picAvatarPost.Image = Properties.Resources.AvatarIcon;
                     picImage.LoadAsync(photo.photoURL);
                     txtShowCaption.Text = photo.caption;
 
@@ -205,7 +212,6 @@ namespace MEnU.Forms
         private async void btnUp_Click(object sender, EventArgs e)
         {
             //DisableHomeComponent();
-            picAvatarPost.Image = Properties.Resources.AvatarIcon;
 
             try
             {
@@ -249,7 +255,7 @@ namespace MEnU.Forms
                     if (message[0] == 'N')
                     {
                         //EnableHomeComponent();
-
+                        
                         return;
                     }
 
@@ -258,6 +264,7 @@ namespace MEnU.Forms
                     currentPhotoId = photo.photoId;
                     currentPhotoPage--;
 
+                    picAvatarPost.Image = Properties.Resources.AvatarIcon;
                     picImage.LoadAsync(photo.photoURL);
                     txtShowCaption.Text = photo.caption;
 
@@ -275,6 +282,7 @@ namespace MEnU.Forms
                 MessageBox.Show($"Error: {ex.Message}");
             }
         }
+
         private void btnLoadimage_Click(object sender, EventArgs e)
         {
             new UploadPhotoUI().ShowDialog();
@@ -283,6 +291,10 @@ namespace MEnU.Forms
         private async Task LoadHomeData()
         {
             DisableHomeComponent();
+            btnDownloadPost.Visible = false;
+            btnDeletePost.Visible = false;
+            btnUp.Visible = false;
+            btnDown.Visible = false;
             lblNoPhotoYet.Visible = false;
 
             currentPhotoPage = 0;
@@ -337,6 +349,7 @@ namespace MEnU.Forms
                     var photo = root["data"].ToObject<Photo>();
 
                     currentPhotoId = photo.photoId;
+                    currentOnwerId = photo.ownerId;
 
                     picImage.LoadAsync(photo.photoURL);
                     txtShowCaption.Text = photo.caption;
@@ -346,6 +359,10 @@ namespace MEnU.Forms
                     lblTimePost.Text = ToTimeAgo(photo.createdAt);
 
                     EnableHomeComponent();
+                    btnDownloadPost.Visible = true;
+                    btnDeletePost.Visible = true;
+                    btnUp.Visible = true;
+                    btnDown.Visible = true;
                 }
             }
             catch (Exception ex)
@@ -390,6 +407,7 @@ namespace MEnU.Forms
             btnReactSad.Visible = true;
             btnSendReactChat.Visible = true;
         }
+
         private async void btnSendReactChat_Click(object sender, EventArgs e)
         {
             string comment = txtReactChat.Text.Trim();
@@ -446,6 +464,7 @@ namespace MEnU.Forms
                     }
 
                     MessageBox.Show("Gửi tin nhắn thành công");
+                    await Seen(currentOnwerId);
                     txtReactChat.Clear();
                 }
             }
@@ -525,6 +544,7 @@ namespace MEnU.Forms
                 MessageBox.Show($"Error: {ex.Message}");
             }
         }
+
         private async void llbViewReactions_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             try
@@ -606,6 +626,7 @@ namespace MEnU.Forms
                 }
             }
         }
+
         private async Task DownloadPhotoAsync(long photoId, string filePath)
         {
             using (HttpClient client = new HttpClient())
@@ -651,6 +672,7 @@ namespace MEnU.Forms
                 MessageBox.Show("Lưu ảnh thành công");
             }
         }
+
         private async void btnDeletePost_Click(object sender, EventArgs e)
         {
             try
@@ -692,11 +714,12 @@ namespace MEnU.Forms
 
                     if (!success)
                     {
-                        MessageBox.Show(message);
+                        MessageBox.Show("Không thể xóa ảnh: " + message);
                         return;
                     }
 
                     MessageBox.Show("Đã xóa ảnh!");
+                    await LoadHomeData();
                 }
             }
             catch (Exception ex)
@@ -704,9 +727,11 @@ namespace MEnU.Forms
                 MessageBox.Show("Error: " + ex.Message);
             }
         }
+
         //
         // CHAT TAB
         //
+
         bool isInChatTab = false;
 
         long currentChatUserId;
@@ -1241,7 +1266,6 @@ namespace MEnU.Forms
             }
         }
 
-
         //
         // FRIENDS TAB
         //
@@ -1561,11 +1585,17 @@ namespace MEnU.Forms
                     request.Content = null;
 
                     var response = await client.SendAsync(request);
+                    var responseJson = await response.Content.ReadAsStringAsync();
+
+                    var root = JObject.Parse(responseJson);
+                    var message = root["message"].ToString();
 
                     if (!response.IsSuccessStatusCode)
                     {
-                        MessageBox.Show("Lỗi khi đồng ý kết bạn");
+                        MessageBox.Show("Lỗi khi đồng ý kết bạn: " + message);
                     }
+
+                    await GetAndDisplayFriends();
                 }
             }
             catch (Exception ex)
@@ -1610,10 +1640,14 @@ namespace MEnU.Forms
                     request.Content = null;
 
                     var response = await client.SendAsync(request);
+                    var responseJson = await response.Content.ReadAsStringAsync();
+
+                    var root = JObject.Parse(responseJson);
+                    var message = root["message"].ToString();
 
                     if (!response.IsSuccessStatusCode)
                     {
-                        MessageBox.Show("Lỗi khi từ chối kết bạn");
+                        MessageBox.Show("Lỗi khi từ chối kết bạn: " + message);
                     }
                 }
             }
@@ -1627,11 +1661,160 @@ namespace MEnU.Forms
         // NOTIFICATIONS TAB
         //
 
+        private async Task<List<Notification>> FetchNotifications()
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                LoadToken(out string accessToken, out _);
+                bool isValid = await VerifyToken(accessToken);
 
+                client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", accessToken);
 
+                if (!isValid)
+                {
+                    var refreshed = await Refresh();
+
+                    if (!refreshed)
+                    {
+                        MessageBox.Show("Session expired. Please log in again.");
+                        return null;
+                    }
+
+                    LoadToken(out string newAccess, out string _);
+
+                    client.DefaultRequestHeaders.Authorization =
+                        new AuthenticationHeaderValue("Bearer", newAccess);
+                }
+
+                var response = await client.GetAsync($"{baseUrl}api/notifications");
+                var responseJson = await response.Content.ReadAsStringAsync();
+
+                var root = JObject.Parse(responseJson);
+                var success = (bool)root["success"];
+                var message = root["message"].ToString();
+
+                if (!success)
+                {
+                    MessageBox.Show("Không thể load thông báo: " + message);
+                }
+
+                return root["data"].ToObject<List<Notification>>();
+            }
+        }
+
+        private async void btnReloadNotification_Click(object sender, EventArgs e)
+        {
+            await LoadNotifications();
+        }
+
+        private async Task LoadNotifications()
+        {
+            flpNotificationView.Controls.Clear();
+
+            try
+            {
+                var notifications = await FetchNotifications();
+
+                if (notifications == null || notifications.Count == 0)
+                {
+                    btnDeleleAllNoti.Visible = false;
+                    return;
+                }
+
+                foreach (var n in notifications)
+                {
+                    var item = new NotificationsControl();
+                    item.SetNotificationData(n);
+
+                    flpNotificationView.Controls.Add(item);
+                    btnDeleleAllNoti.Visible = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi khi load thông báo: " + ex.Message);
+            }
+        }
+
+        private async Task HandleFriendNotificationAsync(Notification friendNotification)
+        {
+            if (friendNotification.message[0] == 's')
+            {
+                await DisplayFriendsWhoAreRequesting();
+            }
+
+            var item = new NotificationsControl();
+            item.SetNotificationData(friendNotification);
+            flpNotificationView.Controls.Add(item);
+        }
+
+        private async void btnDeleleAllNoti_Click(object sender, EventArgs e)
+        {
+            var result = MessageBox.Show("Bạn có muốn xóa tất cả thông báo?", "Xác nhận",
+                              MessageBoxButtons.YesNo,
+                              MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
+            {
+                try
+                {
+                    using (HttpClient client = new HttpClient())
+                    {
+                        LoadToken(out string accessToken, out _);
+                        bool isValid = await VerifyToken(accessToken);
+
+                        client.DefaultRequestHeaders.Authorization =
+                            new AuthenticationHeaderValue("Bearer", accessToken);
+
+                        if (!isValid)
+                        {
+                            var refreshed = await Refresh();
+
+                            if (!refreshed)
+                            {
+                                MessageBox.Show("Session expired. Please log in again.");
+                                return;
+                            }
+
+                            LoadToken(out string newAccess, out string _);
+
+                            client.DefaultRequestHeaders.Authorization =
+                                new AuthenticationHeaderValue("Bearer", newAccess);
+                        }
+
+                        var response = await client.DeleteAsync($"{baseUrl}api/notifications");
+                        var responseJson = await response.Content.ReadAsStringAsync();
+
+                        var root = JObject.Parse(responseJson);
+                        var success = (bool)root["success"];
+                        var message = root["message"].ToString();
+
+                        if (!success)
+                        {
+                            MessageBox.Show("Không thể xóa thông báo: " + message);
+                        }
+
+                        MessageBox.Show("Đã xóa tất cả thông báo");
+                        await LoadNotifications();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message);
+                }
+            }
+            else
+            {
+                return;
+            }
+
+        }
+        
         //
         // SETTINGS TAB
         //
+
         string usernameSetting;
         string displayNameSetting;
         string emailSetting;
@@ -1646,9 +1829,9 @@ namespace MEnU.Forms
                 usernameSetting = me.username;
                 displayNameSetting = me.displayName;
                 emailSetting = me.email;
-                avatarUrlSetting = me.avatarURL;
 
                 if (me.avatarURL != null) picAvatarSetting.LoadAsync(me.avatarURL);
+                avatarUrlSetting = me.avatarURL;
 
                 txtUsername.Text = me.username;
                 txtDisplayname.Text = me.displayName;
@@ -1790,20 +1973,27 @@ namespace MEnU.Forms
 
         private void btnSetavt_Click(object sender, EventArgs e)
         {
-            using (OpenFileDialog ofd = new OpenFileDialog())
+            try
             {
-                ofd.Title = "Chọn ảnh đại diện";
-                ofd.Filter = "Image Files|*.jpg;*.jpeg;*.png";
-                ofd.Multiselect = false;
-
-                if (ofd.ShowDialog() == DialogResult.OK)
+                using (OpenFileDialog ofd = new OpenFileDialog())
                 {
-                    string selectedPath = ofd.FileName;
+                    ofd.Title = "Chọn ảnh đại diện";
+                    ofd.Filter = "Image Files|*.jpg;*.jpeg;*.png";
+                    ofd.Multiselect = false;
 
-                    txtNewAvatarPath.Text = selectedPath;
+                    if (ofd.ShowDialog() == DialogResult.OK)
+                    {
+                        string selectedPath = ofd.FileName;
 
-                    picAvatarSetting.Image = Image.FromFile(selectedPath);
+                        txtNewAvatarPath.Text = selectedPath;
+
+                        picAvatarSetting.Image = Image.FromFile(selectedPath);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: " + ex.Message + "\n\rVui lòng chọn đúng định dạng ảnh");
             }
         }
 
@@ -1814,6 +2004,7 @@ namespace MEnU.Forms
             btnSaveUpdateInfo.Visible = false;
             btnSetavt.Visible = false;
 
+            txtNewAvatarPath.Clear();
             txtNewAvatarPath.Visible = false;
 
             txtDisplayname.ReadOnly = true;
@@ -1822,7 +2013,10 @@ namespace MEnU.Forms
             txtDisplayname.Text = displayNameSetting;
             txtEmail.Text = emailSetting;
 
-            if (avatarUrlSetting != null) picAvatarSetting.LoadAsync(avatarUrlSetting);
+            picAvatarSetting.Image = Properties.Resources.AvatarIcon;
+
+            if (avatarUrlSetting != null) 
+                picAvatarSetting.LoadAsync(avatarUrlSetting);
         }
 
         private void btnChangePassword_Click(object sender, EventArgs e)
@@ -1835,12 +2029,321 @@ namespace MEnU.Forms
             new SendFeedbackUI().ShowDialog();
         }
 
-
         //
         // LINH TINH
         //
+
+        User me;
+        
         RealtimeService _realtime;
 
+        private async void MainHomeUI_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                await DisplayUserInfo();
+                await LoadHomeData();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error when loading main UI " + ex.Message);
+            }
+
+        }
+
+        private async void MainHomeUI_Shown(object sender, EventArgs e)
+        {
+            LoadToken(out string accessToken, out string refreshToken);
+
+            _realtime = new RealtimeService();
+
+            _realtime.OnConnected += () =>
+            {
+                BeginInvoke(new Action(() =>
+                {
+                    rtxLog.AppendText("Connected to WebSocket server.\n");
+
+                }));
+            };
+
+            _realtime.OnDisconnected += () =>
+            {
+                BeginInvoke(new Action(() =>
+                {
+                    rtxLog.AppendText("Disconnected from WebSocket server.\n");
+                }));
+            };
+
+            _realtime.OnRawMessage += (msg) =>
+            {
+                BeginInvoke(new Action(() =>
+                {
+                    rtxLog.AppendText($"Received: {msg}\n");
+                }));
+            };
+
+            _realtime.OnChatReceived += (rtMsg) =>
+            {
+                BeginInvoke(new Action(async () =>
+                {
+                    HandleRealtimeChat(rtMsg);
+                    await HandleChatUI(rtMsg, true);
+                }));
+            };
+
+            _realtime.OnFriendReceived += async (friendNotification) =>
+            {
+                BeginInvoke(new Action(async () =>
+                {
+                    await HandleFriendNotificationAsync(friendNotification);
+                    new PopUpNotificationUI(friendNotification).Show();
+                }));
+            };
+
+            _realtime.OnReactionReceived += (reactNoti) =>
+            {
+                BeginInvoke(new Action(() =>
+                {
+                    var item = new NotificationsControl();
+                    item.SetNotificationData(reactNoti);
+
+                    flpNotificationView.Controls.Add(item);
+                    new PopUpNotificationUI(reactNoti).Show();
+                }));
+            };
+
+            await _realtime.StartAsync(accessToken);
+        }
+
+        private async void btnExit_Click(object sender, EventArgs e)
+        {
+            await _realtime.StopAsync();
+            Application.Exit();
+        }
+
+        private async void btnLogoutMain_Click(object sender, EventArgs e)
+        {
+            var result = MessageBox.Show("Bạn có chắc chắn muốn đăng xuất không?", "Xác nhận",
+                              MessageBoxButtons.YesNo,
+                              MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
+            {
+                try
+                {
+                    LoadToken(out string accessToken, out string refreshToken);
+                    bool isValid = await VerifyToken(accessToken);
+
+                    using (HttpClient client = new HttpClient())
+                    {
+                        client.DefaultRequestHeaders.Authorization =
+                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", $"{accessToken}");
+
+                        if (!isValid)
+                        {
+                            var refreshed = await Refresh();
+                            if (!refreshed)
+                            {
+                                throw new Exception("Session expired. Please log in again.");
+                            }
+
+                            LoadToken(out string newAccess, out string _);
+
+                            client.DefaultRequestHeaders.Authorization =
+                                new AuthenticationHeaderValue("Bearer", newAccess);
+                        }
+
+                        var body = new
+                        {
+                            refreshToken = refreshToken
+                        };
+
+                        var content = new StringContent(
+                            Newtonsoft.Json.JsonConvert.SerializeObject(body),
+                            Encoding.UTF8,
+                            "application/json"
+                            );
+
+                        var response = await client.PostAsync(@$"{baseUrl}api/user/logout", content);
+                        var responseJson = await response.Content.ReadAsStringAsync();
+
+                        var root = JObject.Parse(responseJson);
+
+                        bool success = (bool)root["success"];
+                        string message = root["message"].ToString();
+
+                        if (!success)
+                        {
+                            MessageBox.Show($"Đăng xuất thất bại: {message}");
+                            return;
+                        }
+
+                        MessageBox.Show("Đăng xuất thành công!");
+                        await _realtime.StopAsync();
+                        ClearToken();
+                        this.Hide();
+                        new LoginUI().Show();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error: {ex.Message}");
+                }
+            }
+            else
+            {
+                return;
+            }
+        }
+
+        private async Task<Models.User> GetMyInfo()
+        {
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    LoadToken(out string accessToken, out string refreshToken);
+                    bool isValid = await VerifyToken(accessToken);
+
+                    client.DefaultRequestHeaders.Authorization =
+                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", $"{accessToken}");
+
+                    if (!isValid)
+                    {
+                        var refreshed = await Refresh();
+                        if (!refreshed)
+                        {
+                            throw new Exception("Session expired. Please log in again.");
+                        }
+
+                        LoadToken(out string newAccess, out string _);
+
+                        client.DefaultRequestHeaders.Authorization =
+                            new AuthenticationHeaderValue("Bearer", newAccess);
+                    }
+
+                    var response = await client.GetAsync(@$"{baseUrl}api/user/profile");
+                    var responseJson = await response.Content.ReadAsStringAsync();
+
+                    var root = JObject.Parse(responseJson);
+                    bool success = (bool)root["success"];
+                    string message = root["message"].ToString();
+
+                    if (!success)
+                    {
+                        throw new Exception("Không thể lấy thông tin người dùng.");
+                    }
+
+                    var user = root["data"].ToObject<Models.User>();
+
+                    return user;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+                return null;
+            }
+        }
+
+        private async Task DisplayUserInfo()
+        {
+            try
+            {
+                Models.User user = await GetMyInfo();
+
+                if (user == null) return;
+
+                me = user;
+
+                lblUsername.Text = user.displayName;
+                if (user.avatarURL != null)
+                    pictureBox2.LoadAsync(user.avatarURL);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error when displaying user info: " + ex.Message);
+            }
+
+        }
+
+        private async void tabMenu_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int pageIndex = tabMenu.SelectedIndex;
+            isInChatTab = false;
+
+            switch (pageIndex)
+            {
+                case 0: //Tab Home
+                    LoadHomeData();
+                    break;
+
+                case 1: // Tab Chat
+                    isInChatTab = true;
+                    isSelfChat = false;
+
+                    picAvatarTitleChat.Visible = false;
+                    lblDisplayNameTitleChat.Visible = false;
+
+                    txtContent.Visible = false;
+                    btnSendContent.Visible = false;
+
+                    flowLayoutPanel1.Visible = false;
+                    await GetAndDisplayConversation();
+
+                    flowLayoutPanel1.Controls.Clear();
+
+                    break;
+
+                case 2: // Tab Friends
+                    await GetAndDisplayFriends();
+                    await DisplayFriendsWhoAreRequesting();
+
+                    break;
+
+                case 3: // Tab Notifications
+                    flpNotificationView.Controls.Clear();
+                    btnDeleleAllNoti.Visible = false;
+                    await LoadNotifications();
+                    break;
+
+                case 4: // Tab Setting
+                    btnCancelUpdateInfo.Visible = false;
+                    btnSaveUpdateInfo.Visible = false;
+                    btnSetavt.Visible = false;
+
+                    txtNewAvatarPath.Visible = false;
+                    await DisplayUserInfoInSetting();
+
+                    break;
+            }
+        }
+
+        public static string ToTimeAgo(DateTimeOffset createdAtUtc)
+        {
+            var now = DateTimeOffset.UtcNow;
+            var diff = now - createdAtUtc;
+
+            if (diff.TotalSeconds < 60)
+                return "Vừa xong";
+
+            if (diff.TotalMinutes < 60)
+                return $"{(int)diff.TotalMinutes} phút trước";
+
+            if (diff.TotalHours < 24)
+                return $"{(int)diff.TotalHours} giờ trước";
+
+            if (diff.TotalDays < 7)
+                return $"{(int)diff.TotalDays} ngày trước";
+
+            return createdAtUtc.ToLocalTime().ToString("dd/MM/yyyy");
+        }
+
+        private async void MainHomeUI_Closing(object sender, FormClosingEventArgs e)
+        {
+            await _realtime.StopAsync();
+            Application.Exit();
+        }
 
     }
 }
