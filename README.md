@@ -10,7 +10,7 @@ MEnU là ứng dụng Desktop (Windows) lấy cảm hứng hoàn toàn từ Lock
 
 `2. Phan Vũ Nhật Huy - 24520696 - NhatHuy-Haz`
 
-`3. Văng Minh Thùy dương - 24520364 - vangminhthuyduong`
+`3. Văng Minh Thùy Dương - 24520364 - vangminhthuyduong`
 
 `4. Nguyễn Thị Mỹ Hạnh - 24520452 - HanhNguyen-stat`
 
